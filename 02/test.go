@@ -5,7 +5,7 @@ import (
 	"math/rand"
 )
 
-func testMain() {
+func main() {
 	var count = 0
 
 	for count < 10 {

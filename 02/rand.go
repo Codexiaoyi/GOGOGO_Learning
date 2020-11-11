@@ -5,7 +5,7 @@ import (
 	"math/rand"
 )
 
-func randMain() {
+func main() {
 	var num = rand.Intn(10) + 1
 	fmt.Println(num)
 
