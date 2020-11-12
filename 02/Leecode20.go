@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	a := isValid("()")
+	a := isValid1("()")
 	fmt.Println(a)
 }
 
