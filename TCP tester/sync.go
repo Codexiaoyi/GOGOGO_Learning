@@ -5,6 +5,7 @@ import (
 	"net"
 )
 
+//同步扫描
 func syncTest() {
 	for i := 21; i < 30; i++ {
 		address := fmt.Sprintf("47.106.139.187:%d", i)

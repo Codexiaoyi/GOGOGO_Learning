@@ -1,5 +1,6 @@
 package main
 
 func main() {
-	syncTest()
+	//syncTest()
+	asyncTest()
 }
