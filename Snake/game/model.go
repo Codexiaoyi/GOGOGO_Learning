@@ -1,5 +1,9 @@
 package game
 
+import (
+	tl "github.com/JoelOtter/termloop"
+)
+
 type direction int
 
 //方向枚举
@@ -9,14 +13,6 @@ const (
 	left
 	right
 )
-
-//边界
-type Area struct {
-	Left   int
-	Right  int
-	Top    int
-	Bottom int
-}
 
 //坐标
 type Coordinates struct {
@@ -38,6 +34,7 @@ type Snake struct {
 
 //蛇笼
 type Cage struct {
-	Area Area
-	Show rune
+	*tl.Entity
+	width, height int
+	Coords        map[Coordinates]int
 }
