@@ -28,8 +28,10 @@ type Food struct {
 
 //蛇
 type Snake struct {
+	*tl.Entity
 	Direction     direction
 	BodyPositions []Coordinates
+	BodyLen       int
 }
 
 //蛇笼
