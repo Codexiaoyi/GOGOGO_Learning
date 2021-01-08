@@ -3,24 +3,26 @@ package game
 import tl "github.com/JoelOtter/termloop"
 
 var cage *Cage
+var food *Food
 var game *tl.Game
 
 //准备游戏
 func PrepareGame() {
 	//创建蛇笼
-	//createCage(50, 50)
 	game = tl.NewGame()
 	level := tl.NewBaseLevel(tl.Cell{
 		Bg: tl.ColorWhite,
 	})
 
 	cage = createCage(50, 25)
-	snake := CreateSnake()
+	food = createFood()
+	snake := createSnake()
+
 	level.AddEntity(cage)
+	level.AddEntity(food)
 	level.AddEntity(snake)
-	//level.AddEntity(tl.NewEntity(10, 10, 100, 100))
 	game.Screen().SetLevel(level)
-	game.Screen().SetFps(10)
+	game.Screen().SetFps(5)
 	game.Start()
 }
 

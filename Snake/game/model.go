@@ -22,8 +22,8 @@ type Coordinates struct {
 
 //食物
 type Food struct {
-	Position Coordinates
-	Show     byte
+	*tl.Entity
+	Site Coordinates
 }
 
 //蛇

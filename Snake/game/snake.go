@@ -5,7 +5,7 @@ import (
 )
 
 //创建一条新的蛇
-func CreateSnake() *Snake {
+func createSnake() *Snake {
 	snake := new(Snake)
 	snake.Entity = tl.NewEntity(3, 5, 1, 1)
 	//初始为向右
@@ -53,12 +53,49 @@ func (snake *Snake) Draw(screen *tl.Screen) {
 		EndGame()
 	}
 
+	if snake.isHitFood() {
+		snake.grow()
+	}
+
 	//开画！
 	for _, c := range snake.BodyPositions {
 		screen.RenderCell(c.X, c.Y, &tl.Cell{
 			Fg: tl.ColorGreen,
-			Ch: '$',
+			Ch: '*',
 		})
+	}
+}
+
+//Tick函数来自Termloop用来处理键盘输入
+func (snake *Snake) Tick(event tl.Event) {
+	if event.Type == tl.EventKey {
+		switch event.Key {
+		case tl.KeyArrowRight:
+			if snake.Direction != left {
+				snake.Direction = right
+			}
+		case tl.KeyArrowLeft:
+			if snake.Direction != right {
+				snake.Direction = left
+			}
+		case tl.KeyArrowUp:
+			if snake.Direction != down {
+				snake.Direction = up
+			}
+		case tl.KeyArrowDown:
+			if snake.Direction != up {
+				snake.Direction = down
+			}
+		}
+	}
+}
+
+func (snake *Snake) Collide(collision tl.Physical) {
+	switch collision.(type) {
+	case *Food:
+		snake.grow()
+	case *Cage:
+		EndGame()
 	}
 }
 
@@ -75,6 +112,11 @@ func (snake *Snake) grow() {
 //本次是否有变大变强
 func (snake *Snake) isGrowing() bool {
 	return snake.BodyLen > len(snake.BodyPositions)
+}
+
+//是否吃到食物
+func (snake *Snake) isHitFood() bool {
+	return snake.head().X == food.Site.X && snake.head().Y == food.Site.Y
 }
 
 //是否撞到自己的身体
