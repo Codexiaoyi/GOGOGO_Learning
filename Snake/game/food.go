@@ -2,6 +2,7 @@ package game
 
 import (
 	"math/rand"
+	"time"
 
 	tl "github.com/JoelOtter/termloop"
 )
@@ -10,6 +11,7 @@ import (
 func createFood() *Food {
 	food := new(Food)
 	food.Entity = tl.NewEntity(0, 0, 0, 0)
+	rand.Seed(time.Now().UnixNano())
 	food.movePosition()
 	return food
 }
