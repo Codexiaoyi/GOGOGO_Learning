@@ -8,7 +8,7 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-//前序遍历
+//****************************************前序遍历****************************************
 func preTravelsal(root *TreeNode) []int {
 	if root == nil {
 		return nil
@@ -29,7 +29,7 @@ func preTravelsal(root *TreeNode) []int {
 	return result
 }
 
-//中序遍历
+//****************************************中序遍历****************************************
 func inTravelsal(root *TreeNode) []int {
 	if root == nil {
 		return nil
@@ -51,7 +51,7 @@ func inTravelsal(root *TreeNode) []int {
 	return result
 }
 
-//后序遍历
+//****************************************后序遍历****************************************
 func postTravelsal(root *TreeNode) []int {
 	if root == nil {
 		return nil
@@ -78,7 +78,7 @@ func postTravelsal(root *TreeNode) []int {
 	return result
 }
 
-//BFS层次遍历，一行一行遍历
+//****************************************BFS层次遍历，一行一行遍历****************************************
 func bfsTravelsal(root *TreeNode) []int {
 	if root == nil {
 		return nil
@@ -109,7 +109,7 @@ func bfsTravelsal(root *TreeNode) []int {
 	return result
 }
 
-//104二叉树的最大深度
+//****************************************104二叉树的最大深度****************************************
 func maxDepth(root *TreeNode) int {
 	if root == nil {
 		return 0
@@ -123,7 +123,7 @@ func maxDepth(root *TreeNode) int {
 	}
 }
 
-//110平衡二叉树
+//****************************************110平衡二叉树****************************************
 func isBalanced(root *TreeNode) bool {
 	if root == nil {
 		return true
@@ -155,7 +155,7 @@ func childBalanced(node *TreeNode) (isBalanced bool, floor float64) {
 	return true, rf + 1
 }
 
-//236二叉树的最近公共祖先
+//****************************************236二叉树的最近公共祖先****************************************
 func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	//分治法，如果两个节点在左子树有公共祖先或者右子树有，那就直接返回左子树或右子树，没有则返回当前根节点。
 	if root == nil {
@@ -182,7 +182,7 @@ func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
 	return nil
 }
 
-//102二叉树的层序遍历
+//****************************************102二叉树的层序遍历****************************************
 func levelOrder(root *TreeNode) [][]int {
 	result := make([][]int, 0)
 	if root == nil {
@@ -216,7 +216,7 @@ func levelOrder(root *TreeNode) [][]int {
 	return result
 }
 
-//107二叉树的层序遍历二（自底向上层序遍历）
+//****************************************107二叉树的层序遍历二（自底向上层序遍历）****************************************
 func levelOrderBottom(root *TreeNode) [][]int {
 	result := make([][]int, 0)
 	if root == nil {
@@ -259,7 +259,7 @@ func levelOrderBottom(root *TreeNode) [][]int {
 	return result
 }
 
-//103二叉树的锯齿形层序遍历（一行从左到右，一行从右到左）
+//****************************************103二叉树的锯齿形层序遍历（一行从左到右，一行从右到左）****************************************
 func zigzagLevelOrder(root *TreeNode) [][]int {
 	result := make([][]int, 0)
 	if root == nil {
@@ -293,4 +293,73 @@ func zigzagLevelOrder(root *TreeNode) [][]int {
 		toggle = !toggle
 	}
 	return result
+}
+
+//**************************************** 98验证二叉搜索树 **************************************
+type ResultType struct {
+	IsValid bool
+	// 记录左右两边最大最小值，和根节点进行比较
+	Max *TreeNode
+	Min *TreeNode
+}
+
+func isValidBST(root *TreeNode) bool {
+	result := helper(root)
+	return result.IsValid
+}
+func helper(root *TreeNode) ResultType {
+	result := ResultType{}
+	// check
+	if root == nil {
+		result.IsValid = true
+		return result
+	}
+
+	left := helper(root.Left)
+	right := helper(root.Right)
+
+	if !left.IsValid || !right.IsValid {
+		result.IsValid = false
+		return result
+	}
+	if left.Max != nil && left.Max.Val >= root.Val {
+		result.IsValid = false
+		return result
+	}
+	if right.Min != nil && right.Min.Val <= root.Val {
+		result.IsValid = false
+		return result
+	}
+
+	result.IsValid = true
+	// 如果左边还有更小的3，就用更小的节点，不用4
+	//  5
+	// / \
+	// 1   4
+	//      / \
+	//     3   6
+	result.Min = root
+	if left.Min != nil {
+		result.Min = left.Min
+	}
+	result.Max = root
+	if right.Max != nil {
+		result.Max = right.Max
+	}
+	return result
+}
+
+//****************************************701二叉搜索树中的插入操作（分治法做法）****************************************
+func insertIntoBST(root *TreeNode, val int) *TreeNode {
+	if root == nil {
+		root = &TreeNode{Val: val}
+		return root
+	}
+	//利用分治法直接插到相应叶子节点下
+	if root.Val > val {
+		root.Left = insertIntoBST(root.Left, val)
+	} else {
+		root.Right = insertIntoBST(root.Right, val)
+	}
+	return root
 }
