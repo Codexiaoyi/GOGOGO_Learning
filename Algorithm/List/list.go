@@ -144,8 +144,166 @@ func partition(head *ListNode, x int) *ListNode {
 }
 
 //********************************148. 排序链表*********************************
+func sortList1(head *ListNode) *ListNode {
+	//超时
+	if head == nil || head.Next == nil {
+		return head
+	}
+	dummyNode := &ListNode{Next: head}
+	current := dummyNode
+	var isSort bool = true
+	for isSort {
+		//是否有排序
+		isSort = false
+		for current.Next != nil && current.Next.Next != nil {
+			if current.Next.Val > current.Next.Next.Val {
+				//交换
+				temp0 := current.Next.Next
+				temp1 := current.Next.Next.Next
+				current.Next.Next.Next = current.Next
+				current.Next.Next = temp1
+				current.Next = temp0
+				//有发生排序
+				isSort = true
+			}
+			current = current.Next
+		}
+		//走完一遍就从头来
+		current = dummyNode
+	}
+	return dummyNode.Next
+}
+
+func sortList(head *ListNode) *ListNode {
+	//本题目要求要用O(nlogn)时间和O(1)空间
+	if head == nil || head.Next == nil {
+		return head
+	}
+	//归并排序思想
+	dummyNode := &ListNode{Val: 0}
+	newHead := dummyNode
+	slow, fast := head, head.Next
+	//快指针走两步，慢指针走一步，快指针走完，慢指针就会停在一半的位置
+	for fast != nil && fast.Next != nil {
+		fast = fast.Next.Next
+		slow = slow.Next
+	}
+	//**需要断开中间节点**
+	middle := slow.Next
+	slow.Next = nil
+	left := sortList(head)
+	right := sortList(middle)
+	for left != nil || right != nil {
+		if left == nil {
+			//只有右边有
+			newHead.Next = right
+			break
+		}
+		if right == nil {
+			//只有左边有
+			newHead.Next = left
+			break
+		}
+		if left.Val <= right.Val {
+			newHead.Next = left
+			left = left.Next
+		} else {
+			newHead.Next = right
+			right = right.Next
+		}
+		newHead = newHead.Next
+	}
+	return dummyNode.Next
+}
+
 //********************************143. 重排链表*********************************
+//看错题目版本，这个是隔一个拿出来重新排列
+func reorderList1(head *ListNode) {
+	if head == nil || head.Next == nil {
+		return
+	}
+	//思路：1.分类 2.反转 3.组合
+	cur := head
+	//分类
+	reverseList := &ListNode{Val: 0}
+	newHead := reverseList
+	for cur != nil && cur.Next != nil {
+		newHead.Next = cur.Next
+		cur.Next = cur.Next.Next
+		newHead.Next.Next = nil
+		newHead = newHead.Next
+		cur = cur.Next
+	}
+	//反转新的链表
+	cur = reverseList.Next
+	var preNode *ListNode
+	for cur != nil {
+		temp := cur.Next
+		cur.Next = preNode
+		preNode = cur
+		cur = temp
+	}
+	cur = head
+	//组合
+	for preNode != nil {
+		temp := preNode.Next
+		preNode.Next = cur.Next
+		cur.Next = preNode
+		preNode = temp
+		cur = cur.Next.Next
+	}
+}
+
+//这个是题目要求的，ps：这个解法效率不够
+func reorderList(head *ListNode) {
+	if head == nil || head.Next == nil {
+		return
+	}
+	//思路：1.找中间点 2.切割 3.反转 4.组合
+	//找中间点
+	slow, fast := head, head.Next
+	for fast != nil && fast.Next != nil {
+		fast = fast.Next.Next
+		slow = slow.Next
+	}
+	//切割
+	middle := slow.Next
+	slow.Next = nil
+
+	//反转
+	var preNode *ListNode
+	for middle != nil {
+		temp := middle.Next
+		middle.Next = preNode
+		preNode = middle
+		middle = temp
+	}
+
+	cur := head
+	//组合
+	for preNode != nil {
+		temp := preNode.Next
+		preNode.Next = cur.Next
+		cur.Next = preNode
+		preNode = temp
+		cur = cur.Next.Next
+	}
+}
+
 //********************************141. 环形链表*********************************
+func hasCycle(head *ListNode) bool {
+	//环的问题离不开快慢指针
+	slow, fast := head, head
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+		if slow == fast {
+			return true
+		}
+	}
+	return false
+}
+
 //********************************142. 环形链表 II*********************************
 //********************************234. 回文链表*********************************
 //********************************138. 复制带随机指针的链表*********************************
