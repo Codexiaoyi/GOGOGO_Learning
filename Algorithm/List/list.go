@@ -305,5 +305,54 @@ func hasCycle(head *ListNode) bool {
 }
 
 //********************************142. 环形链表 II*********************************
+func detectCycle(head *ListNode) *ListNode {
+	//依旧快慢指针
+	slow, fast := head, head
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+		if slow == fast {
+			//有环
+			fast = head
+			for fast != slow {
+				fast = fast.Next
+				slow = slow.Next
+			}
+			return slow
+		}
+	}
+	return nil
+}
+
 //********************************234. 回文链表*********************************
+func isPalindrome(head *ListNode) bool {
+	if head == nil || head.Next == nil {
+		return true
+	}
+	//找中间
+	slow, fast := head, head.Next
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+	middle := slow.Next
+	slow.Next = nil
+
+	var preNode *ListNode
+	for middle != nil {
+		temp := middle.Next
+		middle.Next = preNode
+		preNode = middle
+		middle = temp
+	}
+	for head != nil && preNode != nil {
+		if head.Val != preNode.Val {
+			return false
+		}
+		head = head.Next
+		preNode = preNode.Next
+	}
+	return true
+}
+
 //********************************138. 复制带随机指针的链表*********************************
