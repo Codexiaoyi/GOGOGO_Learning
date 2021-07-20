@@ -467,3 +467,34 @@ func sortedArrayToBST(nums []int) *TreeNode {
 
 	return root
 }
+
+//****************************************235. 二叉搜索树的最近公共祖先****************************************
+func lowestCommonAncestor235(root, p, q *TreeNode) *TreeNode {
+	if root == nil {
+		return nil
+	}
+
+	if root == q || root == p {
+		return root
+	}
+
+	left := lowestCommonAncestor235(root.Left, p, q)
+	right := lowestCommonAncestor235(root.Right, p, q)
+
+	if left != nil && right != nil {
+		return root
+	}
+
+	if left == nil && right == nil {
+		return nil
+	}
+
+	if left != nil {
+		return left
+	}
+
+	if right != nil {
+		return right
+	}
+	return nil
+}
