@@ -1,6 +1,10 @@
 package tree
 
-import "math"
+import (
+	"fmt"
+	"math"
+	"strconv"
+)
 
 type TreeNode struct {
 	Val   int
@@ -384,4 +388,82 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
 	}
 
 	return false
+}
+
+//****************************************226. 翻转二叉树****************************************
+func invertTree(root *TreeNode) *TreeNode {
+	if root == nil {
+		return root
+	}
+
+	invertTree(root.Left)
+	invertTree(root.Right)
+
+	t := root.Left
+	root.Left = root.Right
+	root.Right = t
+
+	return root
+}
+
+//****************************************257. 二叉树的所有路径****************************************
+func binaryTreePaths(root *TreeNode) []string {
+	res := make([]string, 0)
+	if root == nil {
+		return res
+	}
+
+	left := binaryTreePaths(root.Left)
+	right := binaryTreePaths(root.Right)
+
+	if len(left) == 0 && len(right) == 0 {
+		res = append(res, strconv.Itoa(root.Val))
+	}
+
+	for _, l := range left {
+		res = append(res, fmt.Sprintf("%s->%s", strconv.Itoa(root.Val), l))
+	}
+
+	for _, r := range right {
+		res = append(res, fmt.Sprintf("%s->%s", strconv.Itoa(root.Val), r))
+	}
+	return res
+}
+
+//****************************************101. 对称二叉树****************************************
+//抄题解
+func isSymmetric(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+
+	//左子树的左子树与右子树的右子树比，左子树的右子树与右子树的左子树比
+	return compare(root.Left, root.Right)
+}
+
+func compare(left, right *TreeNode) bool {
+	if left == nil && right == nil {
+		return true
+	}
+
+	if left == nil || right == nil {
+		return false
+	}
+
+	return left.Val == right.Val && compare(left.Left, right.Right) && compare(left.Right, right.Left)
+}
+
+//****************************************108. 将有序数组转换为二叉搜索树****************************************
+func sortedArrayToBST(nums []int) *TreeNode {
+	if len(nums) == 0 {
+		return nil
+	}
+
+	//二叉搜索树中序遍历就是升序
+	midle := len(nums) / 2
+	root := &TreeNode{Val: nums[midle]}
+	root.Left = sortedArrayToBST(nums[:midle])
+	root.Right = sortedArrayToBST(nums[midle+1:])
+
+	return root
 }
