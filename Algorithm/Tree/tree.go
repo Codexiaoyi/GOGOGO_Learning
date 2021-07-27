@@ -499,7 +499,6 @@ func lowestCommonAncestor235(root, p, q *TreeNode) *TreeNode {
 	return nil
 }
 
-<<<<<<< HEAD
 //****************************************105. 从前序与中序遍历序列构造二叉树****************************************
 func buildTree(preorder []int, inorder []int) *TreeNode {
 	//前序遍历的第一个是根节点,中序遍历根节点的左边都是左子树，右边是右子树
@@ -523,7 +522,6 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 	right := buildTree(right_preorder, right_inorder)
 	root := &TreeNode{Val: preorder[0], Left: left, Right: right}
 	return root
-=======
 //****************************************111. 二叉树的最小深度****************************************
 func minDepth(root *TreeNode) int {
 	if root == nil {
@@ -592,5 +590,4 @@ func hasPathSum(root *TreeNode, targetSum int) bool {
 	right := hasPathSum(root.Right, targetSum-root.Val)
 
 	return left || right
->>>>>>> 64afd32 (add dp)
 }
