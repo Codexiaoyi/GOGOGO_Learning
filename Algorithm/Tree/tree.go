@@ -498,3 +498,28 @@ func lowestCommonAncestor235(root, p, q *TreeNode) *TreeNode {
 	}
 	return nil
 }
+
+//****************************************105. 从前序与中序遍历序列构造二叉树****************************************
+func buildTree(preorder []int, inorder []int) *TreeNode {
+	//前序遍历的第一个是根节点,中序遍历根节点的左边都是左子树，右边是右子树
+	if len(preorder) == 0 {
+		return nil
+	}
+	//左子树中序遍历slice
+	left_inorder := make([]int, 0)
+	for i := 0; i < len(inorder); i++ {
+		if inorder[i] == preorder[0] {
+			break
+		}
+		left_inorder = append(left_inorder, inorder[i])
+	}
+	//分割出左右子树的前序和中序
+	right_inorder := inorder[len(left_inorder)+1:]
+	right_preorder := preorder[len(left_inorder)+1:]
+	left_preorder := preorder[1 : len(left_inorder)+1]
+	//构造左右子树
+	left := buildTree(left_preorder, left_inorder)
+	right := buildTree(right_preorder, right_inorder)
+	root := &TreeNode{Val: preorder[0], Left: left, Right: right}
+	return root
+}
