@@ -522,6 +522,8 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 	right := buildTree(right_preorder, right_inorder)
 	root := &TreeNode{Val: preorder[0], Left: left, Right: right}
 	return root
+}
+
 //****************************************111. 二叉树的最小深度****************************************
 func minDepth(root *TreeNode) int {
 	if root == nil {
@@ -590,4 +592,85 @@ func hasPathSum(root *TreeNode, targetSum int) bool {
 	right := hasPathSum(root.Right, targetSum-root.Val)
 
 	return left || right
+}
+
+//****************************************199. 二叉树的右视图****************************************
+func rightSideView(root *TreeNode) []int {
+	if root == nil {
+		return nil
+	}
+	res := make([]int, 0)
+	//思路：层序遍历每层最后一个节点
+	queue := make([]*TreeNode, 0)
+	//根节点入队
+	queue = append(queue, root)
+	length := len(queue)
+	for length != 0 {
+		//每一层操作
+		for i := 0; i < length; i++ {
+			if i == length-1 {
+				//最后一个节点
+				res = append(res, queue[i].Val)
+			}
+			//左右节点入队
+			if queue[i].Left != nil {
+				queue = append(queue, queue[i].Left)
+			}
+			if queue[i].Right != nil {
+				queue = append(queue, queue[i].Right)
+			}
+		}
+		//一层结束
+		queue = queue[length:]
+		length = len(queue)
+	}
+	return res
+}
+
+//****************************************129. 求根节点到叶节点数字之和****************************************
+func sumNumbers(root *TreeNode) int {
+	return travel_sumNumbers(root, 0)
+}
+
+func travel_sumNumbers(root *TreeNode, total int) int {
+	if root == nil {
+		return 0
+	}
+	//叶子节点
+	if root.Left == nil && root.Right == nil {
+		//返回
+		return total*10 + root.Val
+	}
+	//非叶子节点，就计算后传下去
+	return travel_sumNumbers(root.Left, total*10+root.Val) + travel_sumNumbers(root.Right, total*10+root.Val)
+}
+
+//****************************************114. 二叉树展开为链表****************************************
+func flatten(root *TreeNode) {
+	//前序遍历后依次排入
+	dummyNode := root
+	var lastNode *TreeNode
+	stack := make([]*TreeNode, 0)
+	for root != nil || len(stack) != 0 {
+		for root != nil {
+			stack = append(stack, root)
+			lastNode = root
+			root = root.Left
+		}
+
+		node := stack[len(stack)-1]
+		stack = stack[:len(stack)-1]
+		//node节点放到最后一个节点左边
+		lastNode.Left = node.Right
+		root = node.Right
+	}
+
+	root = dummyNode
+	for root != nil {
+		root.Right = root.Left
+		root.Left = nil
+		root = root.Right
+	}
+
+	root = dummyNode
 }
