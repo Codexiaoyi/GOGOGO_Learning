@@ -674,3 +674,49 @@ func flatten(root *TreeNode) {
 
 	root = dummyNode
 }
+
+//****************************************230. 二叉搜索树中第K小的元素****************************************
+func kthSmallest(root *TreeNode, k int) int {
+	//中序遍历有序然后再找
+	flag := 0
+	stack := make([]*TreeNode, 0)
+	for root != nil || len(stack) > 0 {
+		for root != nil {
+			stack = append(stack, root)
+			root = root.Left
+		}
+
+		node := stack[len(stack)-1]
+		if flag == k-1 {
+			return node.Val
+		}
+		flag++
+		stack = stack[:len(stack)-1]
+		root = node.Right
+	}
+	return 0
+}
+
+//****************************************637. 二叉树的层平均值****************************************
+func averageOfLevels(root *TreeNode) []float64 {
+	result := make([]float64, 0)
+	queue := make([]*TreeNode, 0)
+	queue = append(queue, root)
+	for len(queue) != 0 {
+		length := len(queue)
+		total := 0
+		for i := 0; i < length; i++ {
+			node := queue[i]
+			if node.Left != nil {
+				queue = append(queue, node.Left)
+			}
+			if node.Right != nil {
+				queue = append(queue, node.Right)
+			}
+			total += node.Val
+		}
+		result = append(result, float64(total)/float64(length))
+		queue = queue[length:]
+	}
+	return result
+}

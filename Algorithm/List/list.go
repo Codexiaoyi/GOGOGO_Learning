@@ -355,4 +355,121 @@ func isPalindrome(head *ListNode) bool {
 	return true
 }
 
-//********************************138. 复制带随机指针的链表*********************************
+//****************************************707. 设计链表****************************************
+type MyLinkedList struct {
+	Length     int
+	Head, Tail *LinkNode
+}
+type LinkNode struct {
+	Val        int
+	Prev, Next *LinkNode
+}
+
+/** Initialize your data structure here. */
+func Constructor() MyLinkedList {
+	return MyLinkedList{}
+}
+
+/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+func (this *MyLinkedList) Get(index int) int {
+	if index < 0 || index >= this.Length {
+		return -1
+	}
+	return this.getNode(index).Val
+}
+
+func (this *MyLinkedList) getNode(index int) *LinkNode {
+	if index <= this.Length/2 {
+		//前半段
+		temp := this.Head
+		for i := 0; i < index; i++ {
+			temp = temp.Next
+		}
+		return temp
+	} else {
+		temp := this.Tail
+		for i := 0; i < this.Length-index-1; i++ {
+			temp = temp.Prev
+		}
+		return temp
+	}
+}
+
+/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
+func (this *MyLinkedList) AddAtHead(val int) {
+	if this.Head != nil {
+		//有头节点
+		temp := &LinkNode{Val: val, Next: this.Head}
+		this.Head.Prev = temp
+		//维护头节点
+		this.Head = temp
+	} else {
+		//新加头节点
+		this.Head = &LinkNode{Val: val}
+		this.Tail = this.Head
+	}
+	this.Length++
+}
+
+/** Append a node of value val to the last element of the linked list. */
+func (this *MyLinkedList) AddAtTail(val int) {
+	if this.Tail != nil {
+		//有尾部节点
+		temp := &LinkNode{Val: val, Prev: this.Tail}
+		this.Tail.Next = temp
+		this.Tail = temp
+	} else {
+		this.Head = &LinkNode{Val: val}
+		this.Tail = this.Head
+	}
+	this.Length++
+}
+
+/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
+func (this *MyLinkedList) AddAtIndex(index int, val int) {
+	if index > this.Length {
+		return
+	}
+	if this.Length == index {
+		this.AddAtTail(val)
+		return
+	}
+	if index <= 0 {
+		this.AddAtHead(val)
+		return
+	}
+	node := this.getNode(index)
+	temp := &LinkNode{Val: val}
+	node.Prev.Next = temp
+	temp.Prev = node.Prev
+	node.Prev = temp
+	temp.Next = node
+	this.Length++
+}
+
+/** Delete the index-th node in the linked list, if the index is valid. */
+func (this *MyLinkedList) DeleteAtIndex(index int) {
+	if index >= 0 && index < this.Length {
+		node := this.getNode(index)
+		if node == this.Head {
+			if this.Length == 1 {
+				this.Head = nil
+			} else {
+				this.Head = node.Next
+				this.Head.Prev = nil
+				node.Next = nil
+			}
+		} else if node == this.Tail {
+			this.Tail = node.Prev
+			this.Tail.Next = nil
+			node.Prev = nil
+		} else {
+			//中间节点
+			node.Prev.Next = node.Next
+			node.Next.Prev = node.Prev
+			node.Prev = nil
+			node.Next = nil
+		}
+		this.Length--
+	}
+}
