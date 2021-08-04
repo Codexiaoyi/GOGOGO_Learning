@@ -69,3 +69,52 @@ func minPathSum(grid [][]int) int {
 	}
 	return dp[rows-1][cols-1]
 }
+
+//****************************************746. 使用最小花费爬楼梯****************************************
+func minCostClimbingStairs(cost []int) int {
+	dp := make([]int, len(cost))
+	dp[0] = cost[0]
+	dp[1] = cost[1]
+	for i := 2; i < len(cost); i++ {
+		if dp[i-1] > dp[i-2] {
+			dp[i] = dp[i-2] + cost[i]
+		} else {
+			dp[i] = dp[i-1] + cost[i]
+		}
+	}
+	if dp[len(cost)-1] > dp[len(cost)-2] {
+		return dp[len(cost)-2]
+	}
+	return dp[len(cost)-1]
+}
+
+//****************************************213. 打家劫舍 II****************************************
+func rob2(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	dp := make([]int, len(nums))
+	fromHead := make([]int, len(nums))
+	dp[0] = nums[0]
+	fromHead[0] = 1
+	if nums[0] > nums[1] {
+		dp[1] = nums[0]
+		fromHead[1] = 1
+	} else {
+		dp[1] = nums[1]
+		fromHead[1] = 0
+	}
+	for i := 2; i < len(nums); i++ {
+		if dp[i-1] >= dp[i-2]+nums[i] || (i == len(nums)-1 && fromHead[i-2] == 1) {
+			dp[i] = dp[i-1]
+			fromHead[i] = fromHead[i-1]
+		} else {
+			dp[i] = dp[i-2] + nums[i]
+			fromHead[i] = fromHead[i-2]
+		}
+	}
+	return dp[len(nums)-1]
+}
+
+//[1,1,3,6,7,10,7,1,8,5,9,1,4,4,3]
+//11 10 41 70 111 170 170 250 250 340 340 380 380 410
