@@ -116,5 +116,56 @@ func rob2(nums []int) int {
 	return dp[len(nums)-1]
 }
 
-//[1,1,3,6,7,10,7,1,8,5,9,1,4,4,3]
-//11 10 41 70 111 170 170 250 250 340 340 380 380 410
+//****************************************1137. 第 N 个泰波那契数****************************************
+func tribonacci(n int) int {
+	if n == 0 || n == 1 {
+		return n
+	}
+	if n == 2 {
+		return 1
+	}
+	dp := make([]int, n+1)
+	dp[0] = 0
+	dp[1] = 1
+	dp[2] = 1
+	for i := 3; i <= n; i++ {
+		dp[i] = dp[i-1] + dp[i-2] + dp[i-3]
+	}
+	return dp[n]
+}
+
+//****************************************70. 爬楼梯****************************************
+func climbStairs(n int) int {
+	if n >= 0 && n <= 2 {
+		return n
+	}
+	dp := make([]int, n+1)
+	dp[1] = 1
+	dp[2] = 2
+	for i := 3; i <= n; i++ {
+		dp[i] = dp[i-1] + dp[i-2]
+	}
+	return dp[n]
+}
+
+//****************************************198. 打家劫舍****************************************
+func rob(nums []int) int {
+	if len(nums) == 1 {
+		return nums[0]
+	}
+	dp := make([]int, len(nums)+2)
+	dp[0] = nums[0]
+	if nums[0] > nums[1] {
+		dp[1] = nums[0]
+	} else {
+		dp[1] = nums[1]
+	}
+	for i := 2; i < len(nums); i++ {
+		if dp[i-2]+nums[i] > dp[i-1] {
+			dp[i] = dp[i-2] + nums[i]
+		} else {
+			dp[i] = dp[i-1]
+		}
+	}
+	return dp[len(nums)-1]
+}
