@@ -128,7 +128,7 @@ func quickSort(arr []int, index_start, index_end int) {
 	//左边继续排序
 	quickSort(arr, index_start, i)
 	//右边继续排序
-	quickSort(arr, i, index_end)
+	quickSort(arr, i+1, index_end)
 }
 
 //*******************************611. 有效三角形的个数 2021/8/4*******************
