@@ -1,6 +1,8 @@
 package daily
 
-import "sort"
+import (
+	"sort"
+)
 
 //*******************************2021/7/30 171*******************
 func titleToNumber(columnTitle string) int {
@@ -144,4 +146,54 @@ func triangleNumber(nums []int) int {
 		}
 	}
 	return result
+}
+
+//*******************************802. 找到最终的安全状态 2021/8/5*******************
+func eventualSafeNodes(graph [][]int) []int {
+	//表示下标i的颜色
+	//0表示白色，没有被访问过的
+	//1表示灰色，被访问过
+	//2表示黑色，已经是安全的
+	color := make([]int, len(graph))
+
+	for i, v := range color {
+		if v == 0 {
+			eventualSafeNodes_visit(i, color, graph)
+		}
+	}
+	res := make([]int, 0)
+	for i, v := range color {
+		if v == 2 {
+			res = append(res, i)
+		}
+	}
+	return res
+}
+
+func eventualSafeNodes_visit(currentNode int, color []int, graph [][]int) {
+	//当前节点就是下标，与color中下标对应
+	//被访问到了，灰色
+	color[currentNode] = 1
+	if len(graph[currentNode]) == 0 {
+		//到终点，黑色
+		color[currentNode] = 2
+		return
+	}
+	isSafe := true
+	for _, node := range graph[currentNode] {
+		//广度遍历
+		if color[node] == 0 {
+			//没被访问过，就访问
+			eventualSafeNodes_visit(node, color, graph)
+		}
+		if color[node] == 1 {
+			//如果都遍历完了，还是灰色，就是不安全
+			isSafe = false
+		}
+	}
+
+	if isSafe {
+		//如果当前节点所有的节点遍历完都是安全的，那自己也安全
+		color[currentNode] = 2
+	}
 }
