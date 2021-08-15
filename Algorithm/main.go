@@ -3,37 +3,48 @@ package main
 import "fmt"
 
 func main() {
-	nums := []int{2, 2, 3, 3, 3, 4}
-	q := deleteAndEarn(nums)
-	fmt.Println(q)
-}
-func deleteAndEarn(nums []int) int {
-	maxVal := 0
-	for _, val := range nums {
-		maxVal = max(maxVal, val)
-	}
-	// sum[v] 代表 序号为v的 和，也就是nums中所有的v的和
-	sum := make([]int, maxVal+1)
-	for _, v := range nums {
-		sum[v] += v
-	}
-	return rob(sum)
+	//letterCombinations("23")
+	fmt.Println(letterCombinations("23"))
 }
 
-func rob(nums []int) int {
-	//dp[i] 代表 第i个 删除的时候的所有的和
-	dp := make([]int, len(nums))
-	dp[0] = nums[0]
-	dp[1] = max(dp[0], nums[1])
-	for i := 2; i < len(nums); i++ {
-		dp[i] = max(dp[i-1], dp[i-2]+nums[i])
+func letterCombinations(digits string) []string {
+	strs := make([]string, 0)
+	for _, digit := range digits {
+		switch digit {
+		case '2':
+			strs = append(strs, "abc")
+		case '3':
+			strs = append(strs, "def")
+		case '4':
+			strs = append(strs, "ghi")
+		case '5':
+			strs = append(strs, "jkl")
+		case '6':
+			strs = append(strs, "mno")
+		case '7':
+			strs = append(strs, "pqrs")
+		case '8':
+			strs = append(strs, "tuv")
+		case '9':
+			strs = append(strs, "wxyz")
+		}
 	}
-	return dp[len(nums)-1]
+	results := make([]string, 0)
+	path := make([]byte, 0)
+	letterCombinations_backTracking(0, strs, path, &results)
+	return results
 }
 
-func max(a, b int) int {
-	if a > b {
-		return a
+func letterCombinations_backTracking(k int, strs []string, path []byte, result *[]string) {
+	if len(path) == len(strs) {
+		newP := make([]byte, len(path))
+		copy(newP, path)
+		*result = append(*result, string(newP))
+		return
 	}
-	return b
+	for i := 0; i < len(strs[k]); i++ {
+		path = append(path, strs[k][i])
+		letterCombinations_backTracking(k+1, strs, path, result)
+		path = path[:len(path)-1]
+	}
 }

@@ -197,3 +197,55 @@ func eventualSafeNodes_visit(currentNode int, color []int, graph [][]int) {
 		color[currentNode] = 2
 	}
 }
+
+//*******************************1137. 第 N 个泰波那契数 2021/8/8*******************
+func tribonacci(n int) int {
+	if n <= 1 {
+		return n
+	}
+	dp := []int{0, 1, 1}
+	for i := 3; i <= n; i++ {
+		cur := dp[0] + dp[1] + dp[2]
+		dp[0], dp[1], dp[2] = dp[1], dp[2], cur
+	}
+	return dp[2]
+}
+
+//*******************************413. 等差数列划分 2021/8/10*******************
+func numberOfArithmeticSlices(nums []int) int {
+	if len(nums) < 3 {
+		return 0
+	}
+	result := 0
+	for i := 3; i <= len(nums); i++ {
+		//i是窗口大小
+		//起始位置0，终点位置加上窗口大小
+		start := 0
+		end := start + i - 1
+		for end < len(nums) {
+			if end == len(nums)-1 {
+				if numberOfArithmeticSlices_isArithmetic(nums[start:]) {
+					result++
+				}
+			} else {
+				if numberOfArithmeticSlices_isArithmetic(nums[start : end+1]) {
+					result++
+				}
+			}
+			start++
+			end++
+		}
+	}
+	return result
+}
+
+func numberOfArithmeticSlices_isArithmetic(nums []int) bool {
+	//nums肯定大于3
+	dif := nums[1] - nums[0]
+	for i := 2; i < len(nums); i++ {
+		if nums[i]-nums[i-1] != dif {
+			return false
+		}
+	}
+	return true
+}

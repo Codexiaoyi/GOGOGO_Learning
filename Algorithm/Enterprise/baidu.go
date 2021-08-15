@@ -150,3 +150,97 @@ func detectCycle(head *ListNode) *ListNode {
 	}
 	return nil
 }
+
+//******************************************20. 有效的括号
+func isValid(s string) bool {
+	stack := make([]rune, 0)
+	for _, r := range s {
+		switch r {
+		case '{', '(', '[':
+			stack = append(stack, r)
+		case '}':
+			if len(stack) == 0 || stack[len(stack)-1] != '{' {
+				return false
+			} else {
+				stack = stack[:len(stack)-1]
+			}
+		case ')':
+			if len(stack) == 0 || stack[len(stack)-1] != '(' {
+				return false
+			} else {
+				stack = stack[:len(stack)-1]
+			}
+		case ']':
+			if len(stack) == 0 || stack[len(stack)-1] != '[' {
+				return false
+			} else {
+				stack = stack[:len(stack)-1]
+			}
+		}
+	}
+	if len(stack) > 0 {
+		return false
+	}
+	return true
+}
+
+//******************************************160. 相交链表
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	nodeMap := make(map[*ListNode]struct{})
+	for {
+		if headA == nil {
+			break
+		}
+		nodeMap[headA] = struct{}{}
+		headA = headA.Next
+	}
+
+	for {
+		if headB == nil {
+			return nil
+		}
+		if _, ok := nodeMap[headB]; ok {
+			return headB
+		}
+		headB = headB.Next
+	}
+}
+
+//******************************************15. 三数之和
+//回溯法超时
+// func threeSum(nums []int) [][]int {
+// 	if len(nums) < 3 {
+// 		return nil
+// 	}
+// 	path := make([]int, 0)
+// 	result := make([][]int, 0)
+// 	backTracking(nums, 0, &path, &result)
+// 	return result
+// }
+
+// func backTracking(nums []int, start_index int, path *[]int, result *[][]int) {
+// 	if len(*path) == 3 {
+// 		if (*path)[0]+(*path)[1]+(*path)[2] == 0 {
+// 			newP := make([]int, 3)
+// 			copy(newP, *path)
+// 			sort.Ints(newP)
+// 			isRepeat := false
+// 			for i := 0; i < len(*result); i++ {
+// 				if (*result)[i][0] == newP[0] && (*result)[i][1] == newP[1] && (*result)[i][2] == newP[2] {
+// 					isRepeat = true
+// 					break
+// 				}
+// 			}
+// 			if !isRepeat {
+// 				*result = append(*result, newP)
+// 			}
+// 		}
+// 		return
+// 	}
+// 	length := len(nums)
+// 	for i := start_index; i < length; i++ {
+// 		*path = append(*path, nums[i])
+// 		backTracking(nums, i+1, path, result)
+// 		*path = (*path)[:len(*path)-1]
+// 	}
+// }
