@@ -169,3 +169,54 @@ func rob(nums []int) int {
 	}
 	return dp[len(nums)-1]
 }
+
+//****************************************120. 三角形最小路径和****************************************
+// 记忆化搜索递归方法超时
+// func minimumTotal(triangle [][]int) int {
+// 	memorySearch := make([][]int, len(triangle))
+// 	for i := 0; i < len(triangle); i++ {
+// 		memorySearch[i] = make([]int, len(triangle[i]))
+// 	}
+// 	return minimumTotal_recursive(triangle, memorySearch, 0, 0)
+// }
+
+// func minimumTotal_recursive(triangle, memorySearch [][]int, curIndex_row, curIndex_col int) int {
+// 	if curIndex_row == len(triangle) {
+// 		return 0
+// 	}
+// 	if memorySearch[curIndex_row][curIndex_col] == 0 {
+// 		left := minimumTotal_recursive(triangle, memorySearch, curIndex_row+1, curIndex_col)
+// 		right := minimumTotal_recursive(triangle, memorySearch, curIndex_row+1, curIndex_col+1)
+// 		if left >= right {
+// 			return right + triangle[curIndex_row][curIndex_col]
+// 		}
+// 		return left + triangle[curIndex_row][curIndex_col]
+// 	}
+// 	return memorySearch[curIndex_row][curIndex_col]
+// }
+func minimumTotal(triangle [][]int) int {
+	//dp[i][j]表示当前节点作为终点的最小路径和
+	dp := make([][]int, len(triangle))
+	for i := 0; i < len(triangle); i++ {
+		dp[i] = make([]int, len(triangle[i]))
+	}
+	dp[0][0] = triangle[0][0]
+	for i := 1; i < len(triangle); i++ {
+		dp[i][0] = dp[i-1][0] + triangle[i][0]
+		for j := 1; j < len(triangle[i])-1; j++ {
+			if dp[i-1][j-1] > dp[i-1][j] {
+				dp[i][j] = dp[i-1][j] + triangle[i][j]
+			} else {
+				dp[i][j] = dp[i-1][j-1] + triangle[i][j]
+			}
+		}
+		dp[i][len(triangle[i])-1] = dp[i-1][len(triangle[i-1])-1] + triangle[i][len(triangle[i])-1]
+	}
+	min := math.MaxInt32
+	for i := 0; i < len(dp[len(dp)-1]); i++ {
+		if dp[len(dp)-1][i] < min {
+			min = dp[len(dp)-1][i]
+		}
+	}
+	return min
+}

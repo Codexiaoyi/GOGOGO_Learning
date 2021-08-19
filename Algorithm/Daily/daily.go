@@ -249,3 +249,55 @@ func numberOfArithmeticSlices_isArithmetic(nums []int) bool {
 	}
 	return true
 }
+
+//*******************************551. 学生出勤记录 I 2021/8/17*******************
+func checkRecord(s string) bool {
+	late := 0
+	absent := 0
+	for i := 0; i < len(s); i++ {
+		if s[i] == 'A' {
+			if absent == 1 {
+				return false
+			} else {
+				absent++
+			}
+		}
+		if s[i] == 'L' {
+			late++
+			if late == 3 {
+				return false
+			}
+		} else {
+			late = 0
+		}
+	}
+	return true
+}
+
+//*******************************551. 学生出勤记录 I 2021/8/19*******************
+func reverseVowels(s string) string {
+	r := make([]rune, 0)
+	for _, b := range s {
+		if isVowel(b) {
+			r = append(r, b)
+		}
+	}
+	s_i := 0
+	r_i := len(r) - 1
+	s_b := []rune(s)
+	for r_i >= 0 {
+		if isVowel(s_b[s_i]) {
+			s_b[s_i] = rune(r[r_i])
+			r_i--
+		}
+		s_i++
+	}
+	return string(s_b)
+}
+
+func isVowel(b rune) bool {
+	if b == 'a' || b == 'e' || b == 'i' || b == 'o' || b == 'u' || b == 'A' || b == 'E' || b == 'I' || b == 'O' || b == 'U' {
+		return true
+	}
+	return false
+}
