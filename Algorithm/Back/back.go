@@ -172,3 +172,27 @@ func exist_backTracking(board [][]byte, visitor [][]int, start [2]int, word stri
 	}
 	return false
 }
+
+//*******************************797. 所有可能的路径******************
+func allPathsSourceTarget(graph [][]int) [][]int {
+	result := make([][]int, 0)
+	path := make([]int, 0)
+	allPathsSourceTarget_backtrack(graph, 0, path, &result)
+	return result
+}
+
+func allPathsSourceTarget_backtrack(graph [][]int, index int, path []int, result *[][]int) {
+	if len(graph)-1 == index {
+		newP := make([]int, len(path)+1)
+		copy(newP, path)
+		newP[len(newP)-1] = index
+		*result = append(*result, newP)
+		return
+	}
+
+	for i := 0; i < len(graph[index]); i++ {
+		path = append(path, index)
+		allPathsSourceTarget_backtrack(graph, graph[index][i], path, result)
+		path = path[:len(path)-1]
+	}
+}

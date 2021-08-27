@@ -2,6 +2,7 @@ package daily
 
 import (
 	"sort"
+	"strconv"
 )
 
 //*******************************2021/7/30 171*******************
@@ -300,4 +301,33 @@ func isVowel(b rune) bool {
 		return true
 	}
 	return false
+}
+
+//*******************************443. 压缩字符串 I 2021/8/21*******************
+func compress(chars []byte) int {
+	if len(chars) == 1 {
+		return 1
+	}
+	slow, fast := 0, 1
+	insert := 0
+	length := len(chars)
+	for fast <= length {
+		//当前字符与前面一个字符不相等
+		if fast == length || chars[fast] != chars[fast-1] {
+			count := fast - slow
+			chars[insert] = chars[fast-1]
+			insert++
+			//后面跟数字
+			if count > 1 {
+				count_byte := []byte(strconv.Itoa(count))
+				for i := 0; i < len(count_byte); i++ {
+					chars[insert] = count_byte[i]
+					insert++
+				}
+			}
+			slow = fast
+		}
+		fast++
+	}
+	return insert
 }

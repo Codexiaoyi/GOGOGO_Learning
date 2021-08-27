@@ -1,6 +1,9 @@
 package dp
 
-import "math"
+import (
+	"math"
+	"strconv"
+)
 
 /*
 动态规划:
@@ -219,4 +222,47 @@ func minimumTotal(triangle [][]int) int {
 		}
 	}
 	return min
+}
+
+//****************************************91. 解码方法****************************************
+func numDecodings(s string) int {
+	dp := make([]int, len(s))
+
+	isValid := func(s string) bool {
+		if s[0] == '0' {
+			return false
+		}
+		i, err := strconv.Atoi(s)
+		if err != nil {
+			return false
+		}
+		if i >= 1 && i <= 26 {
+			return true
+		}
+		return false
+	}
+
+	if isValid(string(s[0])) {
+		dp[0] = 1
+	} else {
+		dp[0] = 0
+	}
+	if len(s) > 1 {
+		if isValid(string(s[1])) {
+			dp[1] += dp[0]
+		}
+		if isValid(string(s[:2])) {
+			dp[1] += 1
+		}
+	}
+	for i := 2; i < len(s); i++ {
+		if isValid(string(s[i])) {
+			dp[i] += dp[i-1]
+		}
+		if isValid(string(s[i-1 : i+1])) {
+			dp[i] += dp[i-2]
+		}
+	}
+
+	return dp[len(s)-1]
 }
