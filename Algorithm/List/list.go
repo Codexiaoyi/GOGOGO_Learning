@@ -134,14 +134,23 @@ func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 
 //TODO
 //********************************86. 分隔链表*********************************
-func partition(head *ListNode, x int) *ListNode {
-	if head == nil {
-		return nil
-	}
-	dummyNode := &ListNode{Val: 0}
+// func partition(head *ListNode, x int) *ListNode {
+// 	if head == nil {
+// 		return nil
+// 	}
+// 	dummyNode := &ListNode{Val: 0, Next: head}
+// 	mark := head
+// 	for head != nil {
+// 		if head.Val == x {
+// 			mark = head
+// 			break
+// 		}
+// 		head = head.Next
+// 	}
+// 	head = dummyNode.Next
 
-	return dummyNode.Next
-}
+// 	return dummyNode.Next
+// }
 
 //********************************148. 排序链表*********************************
 func sortList1(head *ListNode) *ListNode {

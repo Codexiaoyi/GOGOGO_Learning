@@ -331,3 +331,71 @@ func compress(chars []byte) int {
 	}
 	return insert
 }
+
+//*******************************797. 所有可能的路径 2021/8/26******************
+func allPathsSourceTarget(graph [][]int) [][]int {
+	result := make([][]int, 0)
+	path := make([]int, 0)
+	allPathsSourceTarget_backtrack(graph, 0, path, &result)
+	return result
+}
+
+func allPathsSourceTarget_backtrack(graph [][]int, index int, path []int, result *[][]int) {
+	if len(graph)-1 == index {
+		newP := make([]int, len(path)+1)
+		copy(newP, path)
+		newP[len(newP)-1] = index
+		*result = append(*result, newP)
+		return
+	}
+
+	for i := 0; i < len(graph[index]); i++ {
+		path = append(path, index)
+		allPathsSourceTarget_backtrack(graph, graph[index][i], path, result)
+		path = path[:len(path)-1]
+	}
+}
+
+//*******************************881. 救生艇 2021/8/27*******************
+func numRescueBoats(people []int, limit int) int {
+	sort.Ints(people)
+	left, right := 0, len(people)-1
+	ans := 0
+	for left <= right {
+		if people[left]+people[right] > limit {
+			right--
+		} else {
+			left++
+			right--
+		}
+		ans += 1
+	}
+	return ans
+}
+
+//*******************************1480. 一维数组的动态和 2021/8/28*******************
+func runningSum(nums []int) []int {
+	for i := 1; i < len(nums); i++ {
+		nums[i] = nums[i] + nums[i-1]
+	}
+	return nums
+}
+
+//*******************************1588. 所有奇数长度子数组的和 2021/8/29*******************
+func sumOddLengthSubarrays(arr []int) int {
+	length := len(arr)
+	ans := 0
+	width := 1
+	for {
+		if width > length {
+			break
+		}
+		for i := 0; i+width-1 < length; i++ {
+			for j := i; j < width+i; j++ {
+				ans += arr[j]
+			}
+		}
+		width += 2
+	}
+	return ans
+}
