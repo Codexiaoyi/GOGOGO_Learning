@@ -2,18 +2,15 @@ package List
 
 //********************************83. 删除排序链表中的重复元素*********************************
 func d83(head *ListNode) *ListNode {
-	if head == nil {
-		return nil
-	}
-	dummyNode := &ListNode{Next: head}
-	for head != nil && head.Next != nil {
+	dummyNode := &ListNode{Val: 0, Next: head}
+	if head != nil && head.Next != nil {
 		if head.Val == head.Next.Val {
-			head.Next, head.Next.Next = head.Next.Next, nil
+			head.Next = head.Next.Next
 		} else {
 			head = head.Next
 		}
 	}
-	return dummyNode.Next
+	return dummyNode
 }
 
-//********************************82. 删除排序链表中的重复元素 II*********************************
+//********************************206*********************************
