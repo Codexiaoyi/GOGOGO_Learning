@@ -1,6 +1,7 @@
 package daily
 
 import (
+	"math"
 	"sort"
 	"strconv"
 )
@@ -398,4 +399,46 @@ func sumOddLengthSubarrays(arr []int) int {
 		width += 2
 	}
 	return ans
+}
+
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
+//*******************************563. 二叉树的坡度 2021/11/18*******************
+func findTilt(root *TreeNode) int {
+	_, total := findTilt_Back(root, 0)
+	return total
+}
+
+func findTilt_Back(root *TreeNode, totalTilt int) (int, int) {
+	if root == nil {
+		return 0, totalTilt
+	}
+	left, lt := findTilt_Back(root.Left, totalTilt)
+	right, rt := findTilt_Back(root.Right, totalTilt)
+	totalTilt += (int)(math.Abs(float64(right) - float64(left)))
+	return left + right + root.Val, totalTilt + lt + rt
+}
+
+//*******************************397. 整数替换 2021/11/19*******************
+func integerReplacement(n int) int {
+	res := 0
+	for n%2 == 0 {
+		n = n / 2
+		res++
+	}
+	if n == 1 {
+		return res
+	}
+	add := integerReplacement(n + 1)
+	pub := integerReplacement(n - 1)
+	if add > pub {
+		res += pub + 1
+	} else {
+		res += add + 1
+	}
+	return res
 }

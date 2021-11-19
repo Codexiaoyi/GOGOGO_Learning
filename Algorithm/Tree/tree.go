@@ -720,3 +720,63 @@ func averageOfLevels(root *TreeNode) []float64 {
 	}
 	return result
 }
+
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
+
+//****************************************109. 有序链表转换二叉搜索树****************************************
+func sortedListToBST(head *ListNode) *TreeNode {
+	nodes := make([]int, 0)
+	for head != nil {
+		nodes = append(nodes, head.Val)
+		head = head.Next
+	}
+	return sortedListToBST_buildTree(nodes)
+}
+
+func sortedListToBST_buildTree(nodes []int) *TreeNode {
+	if len(nodes) == 0 {
+		return nil
+	}
+	mid := len(nodes) / 2
+	left := sortedListToBST_buildTree(nodes[:mid])
+	right := sortedListToBST_buildTree(nodes[mid+1:])
+	return &TreeNode{Val: nodes[mid], Left: left, Right: right}
+}
+
+type Node struct {
+	Val      int
+	Children []*Node
+}
+
+//****************************************559. N 叉树的最大深度****************************************
+func maxDepth1(root *Node) int {
+	if root == nil {
+		return 0
+	}
+	max := 0
+	for _, child := range root.Children {
+		cd := maxDepth1(child)
+		if cd > max {
+			max = cd
+		}
+	}
+	return max + 1
+}
+
+//****************************************700. 二叉搜索树中的搜索****************************************
+func searchBST(root *TreeNode, val int) *TreeNode {
+	if root == nil {
+		return nil
+	}
+	if root.Val == val {
+		return root
+	} else if root.Val > val {
+		return searchBST(root.Left, val)
+	} else if root.Val < val {
+		return searchBST(root.Right, val)
+	}
+	return nil
+}
