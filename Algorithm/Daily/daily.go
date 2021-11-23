@@ -1,6 +1,7 @@
 package daily
 
 import (
+	"algorithm/List"
 	"math"
 	"sort"
 	"strconv"
@@ -441,4 +442,37 @@ func integerReplacement(n int) int {
 		res += add + 1
 	}
 	return res
+}
+
+//*******************************237. 删除链表中的节点 2021/11/2*******************
+func deleteNode(node *List.ListNode) {
+	node.Val = node.Next.Val
+	node.Next = node.Next.Next
+}
+
+//*******************************598. 范围求和 II 2021/11/7*******************
+func maxCount(m int, n int, ops [][]int) int {
+	if len(ops) <= 0 {
+		return m * n
+	}
+	//取交集，取小
+	intersect := func(left []int, right []int) []int {
+		res := make([]int, 2)
+		if left[0] > right[0] {
+			res[0] = right[0]
+		} else {
+			res[0] = left[0]
+		}
+		if left[1] > right[1] {
+			res[1] = right[1]
+		} else {
+			res[1] = left[1]
+		}
+		return res
+	}
+	res := ops[0]
+	for i := 1; i < len(ops); i++ {
+		res = intersect(res, ops[i])
+	}
+	return res[0] * res[1]
 }
