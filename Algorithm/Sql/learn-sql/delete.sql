@@ -1,0 +1,1 @@
+delete from runoob_tbl where runoob_id = 3;

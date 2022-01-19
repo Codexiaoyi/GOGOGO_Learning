@@ -1,0 +1,1 @@
+drop table runoob_tbl;
