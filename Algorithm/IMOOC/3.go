@@ -19,15 +19,91 @@ func binary_search(input []int, target int) int {
 }
 
 //283
-func move_zeros() {
-
+func moveZeroes(nums []int) {
+	if len(nums) <= 1 {
+		return
+	}
+	slow, fast := 0, 0
+	for fast < len(nums) {
+		if nums[fast] != 0 {
+			nums[fast], nums[slow] = nums[slow], nums[fast]
+			slow++
+		}
+		fast++
+	}
 }
 
 //27
+func removeElement(nums []int, val int) int {
+	slow, fast := 0, 0
+	for fast < len(nums) {
+		if nums[fast] != val {
+			nums[fast], nums[slow] = nums[slow], nums[fast]
+			slow++
+		}
+		fast++
+	}
+	return slow
+}
 
 //26
+func removeDuplicates(nums []int) int {
+	n := len(nums)
+	if n <= 1 {
+		return n
+	}
+	flag := nums[n-1] + 1
+	//重复部分变成flag
+	fast, slow := 0, 0
+	for i := 1; i < n; i++ {
+		if nums[i] == nums[slow] {
+			nums[i] = flag
+		} else {
+			slow = i
+		}
+	}
+	slow = 0
+	for fast < n {
+		if nums[fast] != flag {
+			nums[fast], nums[slow] = nums[slow], nums[fast]
+			slow++
+		}
+		fast++
+	}
+	return slow
+}
 
 //80
+func removeDuplicatesII(nums []int) int {
+	n := len(nums)
+	if n <= 1 {
+		return n
+	}
+	count := 1
+	flag := nums[n-1] + 1
+	//重复部分变成flag
+	fast, slow := 0, 0
+	for i := 1; i < n; i++ {
+		if nums[i] == nums[slow] {
+			if count >= 2 {
+				nums[i] = flag
+			}
+			count++
+		} else {
+			slow = i
+			count = 1
+		}
+	}
+	slow = 0
+	for fast < n {
+		if nums[fast] != flag {
+			nums[fast], nums[slow] = nums[slow], nums[fast]
+			slow++
+		}
+		fast++
+	}
+	return slow
+}
 
 //75
 func sortColors(nums []int) {
