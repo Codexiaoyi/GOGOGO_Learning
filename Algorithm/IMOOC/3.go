@@ -156,3 +156,127 @@ func merge(nums1 []int, m int, nums2 []int, n int) {
 		}
 	}
 }
+
+//215
+func findKthLargest(nums []int, k int) int {
+	index := len(nums) - k
+	fastSort := func(nums []int, start, end int) int {
+		pivot := nums[start]
+		for start < end {
+			//从右到左找第一个小于pivot的点
+			for start < end && nums[end] >= pivot {
+				end--
+			}
+			if start < end {
+				//找到小于的点
+				nums[start] = nums[end]
+				start++
+			}
+			//从左到右找第一个大于pivot的点
+			for start < end && nums[start] <= pivot {
+				start++
+			}
+			if start < end {
+				nums[end] = nums[start]
+				end--
+			}
+		}
+		nums[start] = pivot
+		return start
+	}
+
+	resultIndex := fastSort(nums, 0, len(nums)-1)
+	for {
+		if resultIndex == index {
+			return nums[index]
+		}
+		if resultIndex < index {
+			resultIndex = fastSort(nums, resultIndex+1, len(nums)-1)
+		}
+		if resultIndex > index {
+			resultIndex = fastSort(nums, 0, resultIndex-1)
+		}
+	}
+}
+
+//167
+func twoSum(numbers []int, target int) []int {
+	left, right := 0, len(numbers)-1
+	for left < right {
+		sum := numbers[left] + numbers[right]
+		if sum == target {
+			return []int{left, right}
+		} else if sum < target {
+			left++
+		} else {
+			right--
+		}
+	}
+	return []int{}
+}
+
+//344
+func reverseString(s []byte) {
+	left, right := 0, len(s)-1
+	for left < right {
+		s[left], s[right] = s[right], s[left]
+		left++
+		right--
+	}
+}
+
+//11
+func maxArea(height []int) int {
+	left, right := 0, len(height)-1
+	max := 0
+	for left < right {
+		minHeight := 0
+		isRightMin := height[left] > height[right]
+		if isRightMin {
+			minHeight = height[right]
+		} else {
+			minHeight = height[left]
+		}
+		capacity := (right - left) * minHeight
+		if capacity > max {
+			max = capacity
+		}
+		if isRightMin {
+			right--
+		} else {
+			left++
+		}
+	}
+	return max
+}
+
+//209
+func minSubArrayLen(target int, nums []int) int {
+	//滑动窗口，小了就变大
+	left, right := 0, -1 //[left...right] 为了一开始没有任何值，所以right取-1
+	size, sum := len(nums)+1, 0
+	for left < len(nums) {
+		if right < len(nums)-1 && sum < target {
+			right++
+			sum += nums[right]
+		} else {
+			sum -= nums[left]
+			left++
+		}
+
+		if sum >= target {
+			temp := right - left + 1
+			if temp < size {
+				size = temp
+			}
+		}
+	}
+	if size == len(nums)+1 {
+		return 0
+	}
+	return size
+}
+
+//3
+//438
+//76

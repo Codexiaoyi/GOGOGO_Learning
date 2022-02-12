@@ -58,13 +58,13 @@ func sortHeap_sink(nums []int, index int, length int) {
 	}
 }
 
-//快排
+//快排 [4,6,2,3,1]
 func sortQuick(nums []int, start int, end int) {
 	if start >= end {
 		return
 	}
 	mark := nums[start]
-	left, right := start, end
+	left, right := start, end //0,4
 	for {
 		if left >= right {
 			break
