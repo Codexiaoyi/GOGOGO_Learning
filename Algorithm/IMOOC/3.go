@@ -1,5 +1,9 @@
 package imooc
 
+//数组问题
+//滑动窗口、双指针
+//注意边界
+
 //二分查找法
 func binary_search(input []int, target int) int {
 	length := len(input)
