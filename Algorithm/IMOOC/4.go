@@ -3,6 +3,7 @@ package imooc
 import (
 	"sort"
 	"strconv"
+	"strings"
 )
 
 //查找问题
@@ -55,7 +56,53 @@ func isHappy(n int) bool {
 }
 
 //290
+func wordPattern(pattern string, s string) bool {
+	m1 := make(map[string]string)
+	m2 := make(map[string]string)
+	patternSplit := strings.Split(pattern, "")
+	sSplit := strings.Split(s, " ")
+	if len(patternSplit) != len(sSplit) {
+		return false
+	}
+	for index, p := range patternSplit {
+		mValue1, ok1 := m1[p]
+		mValue2, ok2 := m2[sSplit[index]]
+		if !ok1 && !ok2 {
+			m1[p] = sSplit[index]
+			m2[sSplit[index]] = p
+			continue
+		}
+		if mValue1 != sSplit[index] || mValue2 != p {
+			return false
+		}
+	}
+	return true
+}
+
 //205
+func isIsomorphic(s string, t string) bool {
+	m1 := make(map[string]string)
+	m2 := make(map[string]string)
+	patternSplit := strings.Split(t, "")
+	sSplit := strings.Split(s, "")
+	if len(patternSplit) != len(sSplit) {
+		return false
+	}
+	for index, p := range patternSplit {
+		mValue1, ok1 := m1[p]
+		mValue2, ok2 := m2[sSplit[index]]
+		if !ok1 && !ok2 {
+			m1[p] = sSplit[index]
+			m2[sSplit[index]] = p
+			continue
+		}
+		if mValue1 != sSplit[index] || mValue2 != p {
+			return false
+		}
+	}
+	return true
+}
+
 //451
 func frequencySort(s string) string {
 	m := make(map[rune]int)
