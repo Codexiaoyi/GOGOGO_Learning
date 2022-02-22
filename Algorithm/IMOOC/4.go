@@ -128,6 +128,22 @@ func frequencySort(s string) string {
 }
 
 //1
+func twoSum(nums []int, target int) []int {
+	m := make(map[int]int)
+	for index, num := range nums {
+		m[num] = index
+	}
+	for index, num := range nums {
+		sub := target - num
+		if res, ok := m[sub]; ok && index != res {
+			return []int{res, index}
+		}
+	}
+	return []int{}
+}
+
 //15
 //18
 //16
+//219
+//217
