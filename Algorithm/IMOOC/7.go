@@ -90,10 +90,10 @@ func includeRootPathSum(root *TreeNode, targetSum int) int {
 		res++
 	}
 
-// 	//包含当前节点
-// 	res += includeRootPathSum(root.Left, targetSum-root.Val) + includeRootPathSum(root.Right, targetSum-root.Val)
-// 	return res
-// }
+	//包含当前节点
+	res += includeRootPathSum(root.Left, targetSum-root.Val) + includeRootPathSum(root.Right, targetSum-root.Val)
+	return res
+}
 
 //二分搜索树
 //每个节点的键值都大于左孩子，每个节点的键值小于右孩子；以左右孩子为根的子树仍为二叉搜索树
