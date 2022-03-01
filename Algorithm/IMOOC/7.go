@@ -100,6 +100,40 @@ func includeRootPathSum(root *TreeNode, targetSum int) int {
 //235
 //98
 //450
+func deleteNode(root *TreeNode, key int) *TreeNode {
+	if root == nil {
+		return nil
+	}
+	if root.Val == key {
+		if root.Left == nil && root.Right == nil {
+			return nil
+		}
+		if root.Left == nil && root.Right != nil {
+			return root.Right
+		}
+		if root.Right == nil && root.Left != nil {
+			return root.Left
+		}
+		//保存左右节点
+		left := root.Left
+		right := root.Right
+		//temp查找右子树的最小节点
+		temp := root.Right
+		for temp.Left != nil {
+			temp = temp.Left
+		}
+		temp.Left = left
+		return right
+	}
+	if root.Val < key {
+		root.Right = deleteNode(root.Right, key)
+	}
+	if root.Val > key {
+		root.Left = deleteNode(root.Left, key)
+	}
+	return root
+}
+
 //108
 //230
 //236
