@@ -3,6 +3,13 @@ package imooc
 import "strconv"
 
 //递归与回溯问题
+//一般都可以做成树形结构，递归过程就是树形结构的纵向路线
+//单次循环就是横向的节点数
+//1.先确定终止条件，在终止条件中记录下单条路径到结果集
+//2.开始横向的循环
+//3.节点加入单条路径集（可能涉及剪枝）
+//4.递归
+//5.回溯一个单条路径的节点
 
 //93
 func restoreIpAddresses(s string) []string {
@@ -47,45 +54,70 @@ func isIp(s string) bool {
 }
 
 //131
-// func partition(s string) [][]string {
-// 	res := [][]string{}
-// 	path := []string{}
-// 	partition_back(s, 0, path, &res)
-// 	return res
-// }
+func partition(s string) [][]string {
+	res := [][]string{}
+	path := []string{}
+	memo := make(map[string]int)
+	partition_back(s, 0, path, &res, memo)
+	return res
+}
 
-// func partition_back(s string, index int, path []string, res *[][]string) {
-// 	if index == len(s) {
-// 		newP := make([]string, index)
-// 		copy(newP, path)
-// 		*res = append(*res, newP)
-// 	}
+func partition_back(s string, start int, path []string, res *[][]string, mem map[string]int) {
+	if start == len(s) {
+		t := make([]string, len(path))
+		copy(t, path)
+		*res = append(*res, t)
+	}
 
-// 	for i := 0; i < len(s); i++ {
-// 		if i+index > len(s)-1 {
-// 			return
-// 		}
-// 		p := s[index : index+i]
-// 		if !isBack(p) {
-// 			continue
-// 		}
-// 		path = append(path, p)
-// 		partition_back(s, index+i, path, res)
-// 		path = path[:len(path)-1]
-// 	}
-// }
+	for i := start; i < len(s); i++ {
+		p := s[start : i+1]
+		value, _ := mem[p]
+		if value == 2 {
+			continue
+		}
+		if value == 1 || isBack(p, mem) {
+			path = append(path, p)
+			partition_back(s, i+1, path, res, mem)
+			path = path[:len(path)-1]
+		}
+	}
+}
 
-// func isBack(s string) bool {
-// 	start, end := 0, len(s)-1
-// 	for start < end {
-// 		if s[start] != s[end] {
-// 			return false
-// 		}
-// 		start++
-// 		end--
-// 	}
-// 	return true
-// }
+func isBack(s string, mem map[string]int) bool {
+	start, end := 0, len(s)-1
+	for start < end {
+		if s[start] != s[end] {
+			mem[s] = 2
+			return false
+		}
+		start++
+		end--
+	}
+	mem[s] = 1
+	return true
+}
 
 //46
+func permute(nums []int) [][]int {
+	res := [][]int{}
+	permute_back(nums, 0, []int{}, &res)
+	return res
+}
+
+func permute_back(nums []int, index int, path []int, res *[][]int) {
+	if len(path) == len(nums) {
+		*res = append(*res, path)
+		return
+	}
+
+	for i := 0; i < len(nums); i++ {
+		if index == i {
+			return
+		}
+		path = append(path, nums[i])
+		permute_back(nums, 0, path, res)
+		path = path[:len(path)-1]
+	}
+}
+
 //47
