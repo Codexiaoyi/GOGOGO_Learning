@@ -100,23 +100,27 @@ func isBack(s string, mem map[string]int) bool {
 //46
 func permute(nums []int) [][]int {
 	res := [][]int{}
-	permute_back(nums, 0, []int{}, &res)
+	used := make([]bool, len(nums))
+	permute_back(nums, 0, []int{}, used, &res)
 	return res
 }
 
-func permute_back(nums []int, index int, path []int, res *[][]int) {
-	if len(path) == len(nums) {
-		*res = append(*res, path)
+func permute_back(nums []int, index int, path []int, used []bool, res *[][]int) {
+	if index == len(nums) {
+		newP := make([]int, len(path))
+		copy(newP, path)
+		*res = append(*res, newP)
 		return
 	}
 
 	for i := 0; i < len(nums); i++ {
-		if index == i {
-			return
+		if !used[i] {
+			path = append(path, nums[i])
+			used[i] = true
+			permute_back(nums, index+1, path, used, res)
+			path = path[:len(path)-1]
+			used[i] = false
 		}
-		path = append(path, nums[i])
-		permute_back(nums, 0, path, res)
-		path = path[:len(path)-1]
 	}
 }
 
