@@ -476,3 +476,51 @@ func maxCount(m int, n int, ops [][]int) int {
 	}
 	return res[0] * res[1]
 }
+
+//*******************************661. 图片平滑器 2022/3/24*******************
+func imageSmoother(img [][]int) [][]int {
+	res := make([][]int, len(img))
+	for i := 0; i < len(img); i++ {
+		res[i] = make([]int, len(img[0]))
+	}
+	for i := 0; i < len(img); i++ {
+		for j := 0; j < len(img[0]); j++ {
+			sum := img[i][j]
+			count := 1
+			if i > 0 {
+				if j > 0 {
+					sum += img[i-1][j-1]
+					count++
+				}
+				sum += img[i-1][j]
+				count++
+				if j < len(img[i])-1 {
+					sum += img[i-1][j+1]
+					count++
+				}
+			}
+			if j > 0 {
+				sum += img[i][j-1]
+				count++
+			}
+			if j < len(img[i])-1 {
+				sum += img[i][j+1]
+				count++
+			}
+			if i < len(img)-1 {
+				if j > 0 {
+					sum += img[i+1][j-1]
+					count++
+				}
+				sum += img[i+1][j]
+				count++
+				if j < len(img[i])-1 {
+					sum += img[i+1][j+1]
+					count++
+				}
+			}
+			res[i][j] = sum / count
+		}
+	}
+	return res
+}
