@@ -75,3 +75,27 @@ func partition(head *ListNode, x int) *ListNode {
 	}
 	return dummyNode.Next
 }
+
+//***********************147. 对链表进行插入排序*************************
+func insertionSortList(head *ListNode) *ListNode {
+	if head == nil {
+		return nil
+	}
+	dummyHead := &ListNode{Next: head}
+	pre, curr := head, head.Next
+	for curr != nil {
+		if pre.Val <= curr.Val {
+			pre = pre.Next
+		} else {
+			pos := dummyHead
+			for pos.Next.Val <= curr.Val {
+				pos = pos.Next
+			}
+			pre.Next = curr.Next
+			curr.Next = pos.Next
+			pos.Next = curr
+		}
+		curr = pre.Next
+	}
+	return dummyHead.Next
+}
