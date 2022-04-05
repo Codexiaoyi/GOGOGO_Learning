@@ -749,6 +749,9 @@ func sortedListToBST_buildTree(nodes []int) *TreeNode {
 type Node struct {
 	Val      int
 	Children []*Node
+	Left     *Node
+	Right    *Node
+	Next     *Node
 }
 
 //****************************************559. N 叉树的最大深度****************************************
