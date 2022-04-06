@@ -524,3 +524,22 @@ func imageSmoother(img [][]int) [][]int {
 	}
 	return res
 }
+
+//*******************************954. 二倍数对数组 2022/4/1*******************
+func canReorderDoubled(arr []int) bool {
+	sort.Ints(arr)
+	queue := make([]int, 0)
+	for i, a := range arr {
+		if len(queue) == 0 {
+			queue = append(queue, a)
+		} else if queue[0] == 2*a || 2*queue[0] == a {
+			queue = queue[1:]
+		} else {
+			if i > len(arr)/2 {
+				return false
+			}
+			queue = append(queue, a)
+		}
+	}
+	return len(queue) == 0
+}
