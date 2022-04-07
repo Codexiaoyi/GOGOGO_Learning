@@ -1,5 +1,7 @@
 package Sort
 
+import "container/heap"
+
 //********************************75. 颜色分类*********************************
 func sortColors(nums []int) {
 	index := 0
@@ -58,7 +60,7 @@ func sortHeap_sink(nums []int, index int, length int) {
 	}
 }
 
-//快排 [4,6,2,3,1]
+//快排 [4,6,2,3,1] [1,6,2,3,4] [1,3,2,4,6]
 func sortQuick(nums []int, start int, end int) {
 	if start >= end {
 		return
@@ -134,4 +136,81 @@ func sortMerge_merge(left, right []int) []int {
 	return result
 }
 
-//********************************88. 合并两个有序数组*********************************
+//********************************215. 数组中的第K个最大元素*********************************
+func findKthLargest(nums []int, k int) int {
+	l := len(nums)
+	//先构建大顶堆
+	for i := l/2 - 1; i >= 0; i-- {
+		sink(nums, i, l)
+	}
+	count := 0
+	for {
+		count++
+		if count == k {
+			return nums[0]
+		}
+		nums[0], nums[l-count] = nums[l-count], nums[0]
+		sink(nums, 0, l-count)
+	}
+}
+
+//index：需要下沉的元素索引
+func sink(nums []int, index int, length int) {
+	for {
+		left := index*2 + 1
+		right := index*2 + 2
+		root := index
+		if left < length && nums[left] > nums[root] {
+			root = left
+		}
+		if right < length && nums[right] > nums[root] {
+			root = right
+		}
+		if root == index {
+			//根节点最大就不动了
+			break
+		}
+		//交换后继续下沉
+		nums[root], nums[index] = nums[index], nums[root]
+		index = root
+	}
+}
+
+//********************************347. 前 K 个高频元素*********************************
+func topKFrequent(nums []int, k int) []int {
+	occurrences := map[int]int{}
+	for _, num := range nums {
+		occurrences[num]++
+	}
+	h := &IHeap{}
+	heap.Init(h)
+	for key, value := range occurrences {
+		heap.Push(h, [2]int{key, value})
+		if h.Len() > k {
+			heap.Pop(h)
+		}
+	}
+	ret := make([]int, k)
+	for i := 0; i < k; i++ {
+		ret[k-i-1] = heap.Pop(h).([2]int)[0]
+	}
+	return ret
+}
+
+type IHeap [][2]int
+
+func (h IHeap) Len() int           { return len(h) }
+func (h IHeap) Less(i, j int) bool { return h[i][1] < h[j][1] }
+func (h IHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *IHeap) Push(x interface{}) {
+	*h = append(*h, x.([2]int))
+}
+
+func (h *IHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
