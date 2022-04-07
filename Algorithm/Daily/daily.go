@@ -543,3 +543,27 @@ func canReorderDoubled(arr []int) bool {
 	}
 	return len(queue) == 0
 }
+
+//*******************************796. 旋转字符串 2022/4/7*******************
+func rotateString(s string, goal string) bool {
+	if len(s) != len(goal) {
+		return false
+	}
+	m := make(map[byte][]int)
+	for i := 0; i < len(s); i++ {
+		if _, ok := m[s[i]]; ok {
+			m[s[i]] = append(m[s[i]], i)
+		} else {
+			m[s[i]] = []int{i}
+		}
+	}
+	if v, ok := m[goal[0]]; ok {
+		for _, index := range v {
+			str := string(s[index:]) + string(s[:index])
+			if str == goal {
+				return true
+			}
+		}
+	}
+	return false
+}

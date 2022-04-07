@@ -99,3 +99,54 @@ func insertionSortList(head *ListNode) *ListNode {
 	}
 	return dummyHead.Next
 }
+
+//***********************328. 奇偶链表*************************
+func oddEvenList(head *ListNode) *ListNode {
+	if head == nil || head.Next == nil {
+		return head
+	}
+	slow := head
+	fast := head
+	even := head.Next
+	isOdd := true
+	for fast != nil && fast.Next != nil {
+		slow = fast
+		fast = fast.Next
+		slow.Next = fast.Next
+		isOdd = !isOdd
+	}
+	if isOdd {
+		//结尾是奇数
+		fast.Next = even
+	} else {
+		slow.Next = even
+	}
+	return head
+}
+
+//***********************1669. 合并两个链表*************************
+func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
+	start, end := list1, list1
+	list2Head := list2
+	cur := list1
+	count := 0
+	for cur != nil {
+		if count+1 == a {
+			start = cur
+		}
+		if count-1 == b {
+			end = cur
+		}
+		cur = cur.Next
+		count++
+		if list2.Next != nil {
+			list2 = list2.Next
+		}
+	}
+	for list2.Next != nil {
+		list2 = list2.Next
+	}
+	start.Next = list2Head
+	list2.Next = end
+	return list1
+}
