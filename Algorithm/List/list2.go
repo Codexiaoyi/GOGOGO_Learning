@@ -150,3 +150,24 @@ func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
 	list2.Next = end
 	return list1
 }
+
+//***********************19. 删除链表的倒数第 N 个结点*************************
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	count := 0
+	for head != nil {
+		count++
+		head = head.Next
+	}
+	head = dummyNode
+	index := 0
+	for head != nil && head.Next != nil {
+		if index == count-n {
+			head.Next = head.Next.Next
+			return dummyNode.Next
+		}
+		index++
+		head = head.Next
+	}
+	return dummyNode.Next
+}

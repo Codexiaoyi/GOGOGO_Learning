@@ -567,3 +567,31 @@ func rotateString(s string, goal string) bool {
 	}
 	return false
 }
+
+//*******************************429. N 叉树的层序遍历 2022/4/8*******************
+
+type Node struct {
+	Val      int
+	Children []*Node
+}
+
+func levelOrder(root *Node) [][]int {
+	if root == nil {
+		return nil
+	}
+	res := make([][]int, 0)
+	queue := make([]*Node, 0)
+	queue = append(queue, root)
+	l := len(queue)
+	for l != 0 {
+		floor := make([]int, 0, l)
+		for i := 0; i < l; i++ {
+			floor = append(floor, queue[i].Val)
+			queue = append(queue, queue[i].Children...)
+		}
+		queue = queue[l:]
+		l = len(queue)
+		res = append(res, floor)
+	}
+	return res
+}
