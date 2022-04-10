@@ -28,3 +28,29 @@ func connect(root *Node) *Node {
 	}
 	return root
 }
+
+//****************************************106. 从中序与后序遍历序列构造二叉树***************************************
+func buildTree(inorder []int, postorder []int) *TreeNode {
+	inorderLen := len(inorder)
+	if inorderLen == 1 {
+		return &TreeNode{Val: inorder[0]}
+	}
+	inorderIndex := 0
+	//后序最后一个是根节点
+	for i := 0; i < inorderLen; i++ {
+		if inorder[i] == postorder[len(postorder)-1] {
+			inorderIndex = i
+			break
+		}
+	}
+	root := &TreeNode{Val: inorder[inorderIndex]}
+	if inorderIndex > 0 {
+		leftInorder := inorder[:inorderIndex]
+		root.Left = buildTree(leftInorder, postorder[:inorderIndex])
+	}
+	if inorderIndex < inorderLen-1 {
+		rightInorder := inorder[inorderIndex+1:]
+		root.Right = buildTree(rightInorder, postorder[inorderIndex:len(postorder)-1])
+	}
+	return root
+}

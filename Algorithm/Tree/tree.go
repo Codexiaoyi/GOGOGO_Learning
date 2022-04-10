@@ -500,7 +500,7 @@ func lowestCommonAncestor235(root, p, q *TreeNode) *TreeNode {
 }
 
 //****************************************105. 从前序与中序遍历序列构造二叉树****************************************
-func buildTree(preorder []int, inorder []int) *TreeNode {
+func buildTree105(preorder []int, inorder []int) *TreeNode {
 	//前序遍历的第一个是根节点,中序遍历根节点的左边都是左子树，右边是右子树
 	if len(preorder) == 0 {
 		return nil
