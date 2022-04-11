@@ -46,3 +46,9 @@ func down(i0, n int) bool {
 	}
 	return i > i0
 }
+
+func TestIsPossible(t *testing.T) {
+	example := []int{1, 2, 3, 3, 4, 5}
+	isPossible(example)
+	assert.Equal(t, []int{-1, 2}, example)
+}
