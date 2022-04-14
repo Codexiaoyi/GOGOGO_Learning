@@ -54,3 +54,37 @@ func buildTree(inorder []int, postorder []int) *TreeNode {
 	}
 	return root
 }
+
+//****************************************589. N 叉树的前序遍历***************************************
+func preorder(root *Node) []int {
+	if root == nil {
+		return nil
+	}
+	res := make([]int, 0)
+	indexMap := make(map[*Node]int)
+	stack := make([]*Node, 0)
+	stack = append(stack, root)
+	for root != nil || len(stack) > 0 {
+		//遍历所有的左侧根节点
+		for root != nil {
+			res = append(res, root.Val)
+			if len(root.Children) == 0 {
+				//叶子节点，不入栈不迭代
+				break
+			}
+			indexMap[root] = 0
+			stack = append(stack, root)
+			root = root.Children[0]
+		}
+
+		node := stack[len(stack)-1]
+		if indexMap[node] < len(node.Children)-1 {
+			indexMap[node]++
+			root = node.Children[indexMap[node]]
+		} else {
+			stack = stack[:len(stack)-1]
+			root = nil
+		}
+	}
+	return res
+}

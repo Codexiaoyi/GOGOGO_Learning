@@ -3,6 +3,7 @@ package search
 import (
 	"math"
 	"sort"
+	"strings"
 )
 
 //******二分法******
@@ -130,4 +131,72 @@ func threeSumClosest(nums []int, target int) int {
 		}
 	}
 	return res
+}
+
+//******125. 验证回文串******
+func isPalindrome(s string) bool {
+	isNumber := func(b byte) bool { return b >= 48 && b <= 57 }
+	isTrue := func(b byte) bool { return (b >= 48 && b <= 57) || (b >= 65 && b <= 90) || (b >= 97 && b <= 122) }
+	//只区分数字和字母（不区分大小写）
+	front, back := 0, len(s)-1
+	for front < back {
+		if !isTrue(s[front]) {
+			front++
+			continue
+		}
+		if !isTrue(s[back]) {
+			back--
+			continue
+		}
+		if s[front] == s[back] || (isNumber(s[front]) && isNumber(s[back]) && (s[front]-s[back] == 32 || s[back]-s[front] == 32)) {
+			front++
+			back--
+			continue
+		}
+		return false
+	}
+	return true
+}
+
+//******151. 颠倒字符串中的单词******
+func reverseWords(s string) string {
+	res := strings.Builder{}
+	start, end := len(s)-1, len(s)-1
+	for start >= 0 {
+		if s[start] != ' ' && start != len(s)-1 && s[start+1] == ' ' {
+			end = start
+		}
+		if s[start] == ' ' && start != len(s)-1 && s[start+1] != ' ' {
+			res.WriteString(string(s[start+1 : end+1]))
+			res.WriteString(" ")
+		}
+		start--
+	}
+	if s[0] == ' ' {
+		resStr := res.String()
+		return string(resStr[:res.Len()-1])
+	}
+	res.WriteString(s[:end+1])
+	return res.String()
+}
+
+//******31. 下一个排列******
+func nextPermutation(nums []int) {
+	//先找到最靠右的第一个非降序的位置
+	i := len(nums) - 2
+	for i >= 0 && nums[i] > nums[i+1] {
+		i--
+	}
+	if i < 0 {
+		//全是降序，直接重排返回
+		sort.Ints(nums)
+		return
+	}
+	//找到i右边最接近i的数
+	j := len(nums) - 1
+	for j > i && nums[i] > nums[j] {
+		j--
+	}
+	nums[i], nums[j] = nums[j], nums[i]
+	sort.Ints(nums[i+1:])
 }

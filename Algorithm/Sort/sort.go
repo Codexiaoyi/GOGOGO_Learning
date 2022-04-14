@@ -214,3 +214,24 @@ func (h *IHeap) Pop() interface{} {
 	*h = old[0 : n-1]
 	return x
 }
+
+//********************************496. 下一个更大元素 I*********************************
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
+	m := make(map[int]int)
+	for i := 0; i < len(nums2); i++ {
+		m[nums2[i]] = i
+	}
+	temp := -1
+	for i := 0; i < len(nums1); i++ {
+		temp = -1
+		index := m[nums1[i]]
+		for j := index + 1; j < len(nums2); j++ {
+			if nums2[j] > nums1[i] {
+				temp = nums2[j]
+				break
+			}
+		}
+		nums1[i] = temp
+	}
+	return nums1
+}

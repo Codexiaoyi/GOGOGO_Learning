@@ -1,4 +1,4 @@
-package Stack
+package StackAndQueue
 
 //********************************155. 最小栈*********************************
 type MinStack struct {

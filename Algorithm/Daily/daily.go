@@ -608,3 +608,18 @@ func countNumbersWithUniqueDigits(n int) int {
 	}
 	return dp[n]
 }
+
+//*******************************1672. 最富有客户的资产总量 2022/4/14*******************
+func maximumWealth(accounts [][]int) int {
+	max := 0
+	for i := 0; i < len(accounts); i++ {
+		curMax := 0
+		for j := 0; j < len(accounts[i]); j++ {
+			curMax += accounts[i][j]
+		}
+		if curMax > max {
+			max = curMax
+		}
+	}
+	return max
+}
