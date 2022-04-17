@@ -5,6 +5,7 @@ import (
 	"math"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 //*******************************2021/7/30 171*******************
@@ -622,4 +623,44 @@ func maximumWealth(accounts [][]int) int {
 		}
 	}
 	return max
+}
+
+//*******************************819. 最常见的单词 2022/4/17*******************
+func mostCommonWord(paragraph string, banned []string) string {
+	bannedMap := make(map[string]bool)
+	for i := 0; i < len(banned); i++ {
+		bannedMap[banned[i]] = true
+	}
+	isWord := func(b byte) bool {
+		return (b >= 65 && b <= 90) || (b >= 97 && b <= 122)
+	}
+	wordMap := make(map[string]int)
+	start, end := 0, 0
+	for end < len(paragraph) {
+		if isWord(paragraph[end]) && end > 0 && !isWord(paragraph[end-1]) {
+			start = end
+		}
+		if isWord(paragraph[end]) && end < len(paragraph)-1 && !isWord(paragraph[end+1]) {
+			word := strings.ToLower(string(paragraph[start : end+1]))
+			if !bannedMap[word] {
+				wordMap[word] += 1
+			}
+		}
+		end++
+	}
+	if isWord(paragraph[len(paragraph)-1]) {
+		word := strings.ToLower(string(paragraph[start:]))
+		if !bannedMap[word] {
+			wordMap[word] += 1
+		}
+	}
+	max := 0
+	res := ""
+	for k, v := range wordMap {
+		if v > max {
+			max = v
+			res = k
+		}
+	}
+	return res
 }
