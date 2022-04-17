@@ -5,7 +5,7 @@ import (
 )
 
 //********************************912. 排序数组*********************************
-func kSmallestPairs(nums1, nums2 []int, k int) (ans [][]int) {
+func kSmallestPairs1(nums1, nums2 []int, k int) (ans [][]int) {
 	m, n := len(nums1), len(nums2)
 	h := hp{nil, nums1, nums2}
 	for i := 0; i < k && i < m; i++ {
@@ -89,4 +89,42 @@ LOOP:
 		}
 	}
 	return true
+}
+
+//********************************373. 查找和最小的 K 对数字*********************************
+type Heap373 [][2]int
+
+func (h Heap373) Less(i, j int) bool { return h[i][0]+h[i][1] < h[j][0]+h[j][1] }
+func (h Heap373) Len() int           { return len(h) }
+func (h Heap373) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *Heap373) Push(x interface{}) {
+	*h = append(*h, x.([2]int))
+}
+
+func (h *Heap373) Pop() interface{} {
+	n := len(*h)
+	x := (*h)[n-1]
+	*h = (*h)[:n-1]
+	return x
+}
+
+func kSmallestPairs(nums1 []int, nums2 []int, k int) [][]int {
+	h := &Heap373{}
+	heap.Init(h)
+	for i := 0; i < len(nums1); i++ {
+		for j := 0; j < len(nums2); j++ {
+			heap.Push(h, [2]int{nums1[i], nums2[j]})
+		}
+	}
+	l := h.Len()
+	if k < l {
+		l = k
+	}
+	res := make([][]int, l)
+	for i := 0; i < l; i++ {
+		kv := heap.Pop(h).([2]int)
+		res[i] = kv[:]
+	}
+	return res
 }
