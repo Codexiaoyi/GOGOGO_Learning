@@ -171,3 +171,21 @@ func removeNthFromEnd(head *ListNode, n int) *ListNode {
 	}
 	return dummyNode.Next
 }
+
+//***********************876. 链表的中间结点*************************
+func middleNode(head *ListNode) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	count := 0
+	for head != nil {
+		count++
+		head = head.Next
+	}
+	mid := count/2 + 1
+	count = 1
+	head = dummyNode.Next
+	for count != mid && head != nil {
+		count++
+		head = head.Next
+	}
+	return head
+}

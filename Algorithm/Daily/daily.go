@@ -664,3 +664,24 @@ func mostCommonWord(paragraph string, banned []string) string {
 	}
 	return res
 }
+
+//*******************************953. 验证外星语词典 2022/5/18*******************
+// func isAlienSorted(words []string, order string) bool {
+// 	if len(words) <= 1 {
+// 		return true
+// 	}
+// 	m := make(map[byte]int)
+// 	for i := 0; i < len(order); i++ {
+// 		m[order[i]] = i
+// 	}
+// 	length := 0
+// 	for i := 0; i < len(words); i++ {
+// 		if len(words[i]) > length {
+// 			length = len(words[i])
+// 		}
+// 	}
+// 	for i := 0; i < length; i++ {
+
+// 	}
+// 	return true
+// }
