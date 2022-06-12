@@ -1,6 +1,7 @@
 package offer
 
 import (
+	"math"
 	"strings"
 )
 
@@ -421,4 +422,95 @@ func compare(a *TreeNode, b *TreeNode) bool {
 		return false
 	}
 	return a.Val == b.Val && compare(a.Left, b.Right) && compare(a.Right, b.Left)
+}
+
+//****************************************剑指 Offer 10- I. 斐波那契数列***************************************
+func fib(n int) int {
+	if n < 2 {
+		return n
+	}
+	f := make([]int, n+1)
+	f[0] = 0
+	f[1] = 1
+	for i := 2; i <= n; i++ {
+		f[i] = f[i-1]%(1e9+7) + f[i-2]%(1e9+7)
+	}
+	return f[n] % (1e9 + 7)
+}
+
+//****************************************剑指 Offer 10- II. 青蛙跳台阶问题***************************************
+func numWays(n int) int {
+	if n < 2 {
+		return 1
+	}
+	dp := make([]int, n+1)
+	dp[0] = 1
+	dp[1] = 1
+	for i := 2; i <= n; i++ {
+		dp[i] = dp[i-1]%(1e9+7) + dp[i-2]%(1e9+7)
+	}
+	return dp[n] % (1e9 + 7)
+}
+
+//****************************************剑指 Offer 63. 股票的最大利润***************************************
+func maxProfit(prices []int) int {
+	if len(prices) < 2 {
+		return 0
+	}
+	res := 0
+	min := prices[0]
+	for i := 1; i < len(prices); i++ {
+		res = int(math.Max(float64(res), float64(prices[i]-min)))
+		min = int(math.Min(float64(min), float64(prices[i])))
+	}
+	return res
+}
+
+//****************************************剑指 Offer 42. 连续子数组的最大和**************************************
+func maxSubArray(nums []int) int {
+	max := nums[0]
+	f := make([]int, len(nums))
+	f[0] = nums[0]
+	for i := 1; i < len(nums); i++ {
+		new := nums[i]
+		sum := nums[i] + f[i-1]
+		if new > sum {
+			f[i] = new
+		} else {
+			f[i] = sum
+		}
+		if f[i] > max {
+			max = f[i]
+		}
+	}
+	return max
+}
+
+//****************************************剑指 Offer 47. 礼物的最大价值**************************************
+func maxValue(grid [][]int) int {
+	row_len := len(grid)
+	col_len := len(grid[0])
+	f := make([][]int, row_len)
+	for i := 0; i < row_len; i++ {
+		f[i] = make([]int, col_len)
+	}
+	f[0][0] = grid[0][0]
+	for i := 1; i < row_len; i++ {
+		f[i][0] = grid[i][0] + f[i-1][0]
+	}
+	for i := 1; i < col_len; i++ {
+		f[0][i] = grid[0][i] + f[0][i-1]
+	}
+	for i := 1; i < row_len; i++ {
+		for j := 1; j < col_len; j++ {
+			up := f[i][j-1]
+			left := f[i-1][j]
+			if up >= left {
+				f[i][j] = up + grid[i][j]
+			} else {
+				f[i][j] = left + grid[i][j]
+			}
+		}
+	}
+	return f[row_len-1][col_len-1]
 }
