@@ -2,6 +2,7 @@ package offer
 
 import (
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -513,4 +514,81 @@ func maxValue(grid [][]int) int {
 		}
 	}
 	return f[row_len-1][col_len-1]
+}
+
+//****************************************剑指 Offer 46. 把数字翻译成字符串**************************************
+func translateNum(num int) int {
+	if num < 10 {
+		return 1
+	}
+	nums := strconv.Itoa(num)
+	f := make([]int, len(nums))
+	f[0] = 1
+	for i := 1; i < len(nums); i++ {
+		pre, _ := strconv.Atoi(string(nums[i-1]))
+		cur, _ := strconv.Atoi(string(nums[i]))
+		if pre == 0 || pre*10+cur > 25 {
+			f[i] = f[i-1]
+		} else {
+			if i == 1 {
+				f[i] = 2
+			} else {
+				f[i] = f[i-1] + f[i-2]
+			}
+		}
+	}
+	return f[len(nums)-1]
+}
+
+//****************************************剑指 Offer 48. 最长不含重复字符的子字符串**************************************
+func lengthOfLongestSubstring(s string) int {
+	if len(s) <= 1 {
+		return len(s)
+	}
+	start, end := 0, 0
+	maxLength := 0
+	m := make(map[byte]bool)
+	for start < len(s) {
+		if start != 0 {
+			delete(m, s[start-1])
+		}
+		for end < len(s) && !m[s[end]] {
+			m[s[end]] = true
+			end++
+		}
+		cur := end - start
+		if cur > maxLength {
+			maxLength = cur
+		}
+		start++
+	}
+	return maxLength
+}
+
+//****************************************剑指 Offer 18. 删除链表的节点**************************************
+func deleteNode(head *ListNode, val int) *ListNode {
+	dummyNode := &ListNode{Next: head}
+	cur := dummyNode
+	for cur != nil && cur.Next != nil {
+		if cur.Next.Val == val {
+			cur.Next = cur.Next.Next
+		}
+		cur = cur.Next
+	}
+	return dummyNode.Next
+}
+
+//****************************************剑指 Offer 22. 链表中倒数第k个节点**************************************
+func getKthFromEnd(head *ListNode, k int) *ListNode {
+	count := 0
+	slow, fast := head, head
+	for fast != nil {
+		if count == k {
+			slow = slow.Next
+		} else {
+			count++
+		}
+		fast = fast.Next
+	}
+	return slow
 }
