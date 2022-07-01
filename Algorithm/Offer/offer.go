@@ -1,10 +1,50 @@
 package offer
 
 import (
+	"container/heap"
 	"math"
+	"sort"
 	"strconv"
 	"strings"
 )
+
+//****************************************剑指 Offer 04. 二维数组中的查找****************************************
+// func findNumberIn2DArray(matrix [][]int, target int) bool {
+// 	if len(matrix) == 0 || len(matrix[0]) == 0 || target < matrix[0][0] || target > matrix[len(matrix)-1][len(matrix[0])-1] {
+// 		return false
+// 	}
+// 	row := len(matrix)
+// 	col := len(matrix[0])
+// 	for i := 0; i < row; i++ {
+// 		if matrix[i][col-1] < target {
+// 			continue
+// 		}
+// 		for j := 0; j < col; j++ {
+// 			if matrix[i][j] == target {
+// 				return true
+// 			}
+// 		}
+// 	}
+// 	return false
+// }
+
+//****************************************剑指 Offer 05. 替换空格****************************************
+// func replaceSpace(s string) string {
+// 	if len(s) == 0 {
+// 		return ""
+// 	}
+// 	if len(s) == 1 {
+// 		if s == " " {
+// 			return "%20"
+// 		} else {
+// 			return s
+// 		}
+// 	}
+// 	midle := len(s) / 2
+// 	left := replaceSpace(s[:midle])
+// 	right := replaceSpace(s[midle:])
+// 	return left + right
+// }
 
 //****************************************剑指 Offer 09.用两个栈实现队列****************************************
 
@@ -591,4 +631,363 @@ func getKthFromEnd(head *ListNode, k int) *ListNode {
 		fast = fast.Next
 	}
 	return slow
+}
+
+//****************************************剑指 Offer 25. 合并两个排序的链表**************************************
+func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+	dummyNode := &ListNode{}
+	cur := dummyNode
+	for l1 != nil && l2 != nil {
+		if l1.Val >= l2.Val {
+			cur.Next = l2
+			l2 = l2.Next
+		} else {
+			cur.Next = l1
+			l1 = l1.Next
+		}
+		cur = cur.Next
+	}
+	if l1 != nil {
+		cur.Next = l1
+	}
+	if l2 != nil {
+		cur.Next = l2
+	}
+	return dummyNode.Next
+}
+
+//****************************************剑指 Offer 52. 两个链表的第一个公共节点**************************************
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+	nodeMap := make(map[*ListNode]struct{})
+	for {
+		if headA == nil {
+			break
+		}
+		nodeMap[headA] = struct{}{}
+		headA = headA.Next
+	}
+
+	for {
+		if headB == nil {
+			return nil
+		}
+		if _, ok := nodeMap[headB]; ok {
+			return headB
+		}
+		headB = headB.Next
+	}
+}
+
+//****************************************剑指 Offer 21. 调整数组顺序使奇数位于偶数前面**************************************
+func exchange(nums []int) []int {
+	if len(nums) <= 1 {
+		return nums
+	}
+	slow, fast := 0, 0
+	for fast < len(nums) {
+		if nums[fast]%2 == 1 {
+			nums[slow], nums[fast] = nums[fast], nums[slow]
+			slow++
+		}
+		fast++
+	}
+	return nums
+}
+
+//****************************************剑指 Offer 57. 和为s的两个数字**************************************
+func twoSum(nums []int, target int) []int {
+	res := make([]int, 0, 2)
+	front, behind := 0, len(nums)-1
+	for front != behind {
+		if nums[front]+nums[behind] == target {
+			res = append(res, nums[front], nums[behind])
+			break
+		}
+		if nums[front]+nums[behind] > target {
+			behind--
+		}
+		if nums[front]+nums[behind] < target {
+			front++
+		}
+	}
+	return res
+}
+
+//****************************************剑指 Offer 58 - I. 翻转单词顺序**************************************
+func reverseWords(s string) string {
+	var res string
+	var i = len(s) - 1
+	var j = i
+	for i >= 0 {
+		for i >= 0 && s[i] == ' ' {
+			i--
+		}
+		j = i
+		for i >= 0 && s[i] != ' ' {
+			i--
+		}
+		res += s[i+1:j+1] + " "
+	}
+	return strings.TrimRight(res, " ")
+}
+
+//****************************************剑指 Offer 12. 矩阵中的路径**************************************
+
+//****************************************剑指 Offer 45. 把数组排成最小的数**************************************
+// func minNumber(nums []int) string {
+// 	h := (IHeap)(nums)
+// 	heap.Init(&h)
+// 	var b strings.Builder
+// 	for i := 0; i < h.Len(); i++ {
+// 		b.WriteString(strconv.Itoa(h[i]))
+// 	}
+// 	return b.String()
+// }
+
+// type IHeap []int
+
+// func (h IHeap) Len() int {
+// 	return len(h)
+// }
+
+// func (h IHeap) Less(i, j int) bool {
+// 	front := strconv.Itoa(h[i])
+// 	back := strconv.Itoa(h[j])
+// 	index := 0
+// 	for index < len(front) && index < len(back) {
+// 		f, _ := strconv.Atoi(string(front[index]))
+// 		b, _ := strconv.Atoi(string(back[index]))
+// 		if f < b {
+// 			return true
+// 		}
+// 		if f > b {
+// 			return false
+// 		}
+// 		index++
+// 	}
+// 	return index < len(front)
+// }
+
+// func (h IHeap) Swap(i, j int) {
+// 	h[i], h[j] = h[j], h[i]
+// }
+
+// func (h *IHeap) Push(x interface{}) {
+// 	*h = append(*h, x.(int))
+// }
+
+// func (h *IHeap) Pop() interface{} {
+// 	n := len(*h)
+// 	x := (*h)[n-1]
+// 	*h = (*h)[:n-1]
+// 	return x
+// }
+
+//****************************************剑指 Offer 61. 扑克牌中的顺子**************************************
+func isStraight(nums []int) bool {
+	sort.Ints(nums)
+	i := 0
+	for nums[i] == 0 {
+		i++
+	}
+	if i > 1 {
+		return false
+	}
+	if nums[4]-nums[i] != 4 {
+		return false
+	}
+	for j := i + 1; j < 5; j++ {
+		if nums[j] == nums[j-1] {
+			return false
+		}
+	}
+	return true
+}
+
+//****************************************剑指 Offer 40. 最小的k个数**************************************
+func getLeastNumbers(arr []int, k int) []int {
+	h := heap40{}
+	heap.Init(&h)
+	for i := 0; i < len(arr); i++ {
+		heap.Push(&h, arr[i])
+	}
+	for i := 0; i < len(arr)-k; i++ {
+		heap.Pop(&h)
+	}
+	return h
+}
+
+type heap40 []int
+
+func (h heap40) Len() int {
+	return len(h)
+}
+
+func (h heap40) Less(i, j int) bool {
+	return h[i] > h[j]
+}
+
+func (h heap40) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+func (h *heap40) Push(x interface{}) {
+	*h = append(*h, x.(int))
+}
+
+func (h *heap40) Pop() interface{} {
+	l := len(*h)
+	x := (*h)[l-1]
+	*h = (*h)[:l-1]
+	return x
+}
+
+//****************************************剑指 Offer 55 - I. 二叉树的深度**************************************
+func maxDepth(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+	left := maxDepth(root.Left)
+	right := maxDepth(root.Right)
+	if left > right {
+		return left + 1
+	}
+	return right + 1
+}
+
+//****************************************剑指 Offer 55 - II. 平衡二叉树**************************************
+func isBalanced(root *TreeNode) bool {
+	if root == nil {
+		return true
+	}
+
+	//分治法
+	balanced, _ := childBalanced(root)
+	return balanced
+}
+
+func childBalanced(node *TreeNode) (isBalanced bool, floor float64) {
+	if node == nil {
+		return true, 0
+	}
+
+	lb, lf := childBalanced(node.Left)
+	rb, rf := childBalanced(node.Right)
+	if !lb || !rb {
+		return false, 0
+	}
+
+	floor = math.Abs(float64(lf - rf))
+	if floor > 1 {
+		return false, floor
+	}
+	if lf > rf {
+		return true, lf + 1
+	}
+	return true, rf + 1
+}
+
+//****************************************剑指 Offer 64. 求1+2+…+n**************************************
+func sumNums(n int) int {
+	ans := 0
+	var sum func(int) bool
+	sum = func(n int) bool {
+		ans += n
+		return n > 0 && sum(n-1)
+	}
+	sum(n)
+	return ans
+}
+
+//****************************************剑指 Offer 68 - II. 二叉树的最近公共祖先**************************************
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+	ancestor, _ := lowestCommonAncestor_dfs(root, p, q)
+	return ancestor
+}
+
+func lowestCommonAncestor_dfs(root, p, q *TreeNode) (*TreeNode, bool) {
+	if root == nil {
+		return nil, false
+	}
+	if root == p || root == q {
+		return root, true
+	}
+	left, le := lowestCommonAncestor_dfs(root.Left, p, q)
+	right, re := lowestCommonAncestor_dfs(root.Right, p, q)
+	if !le && !re {
+		return nil, false
+	}
+	if !le && re {
+		return right, true
+	}
+	if !re && le {
+		return left, true
+	}
+	return root, true
+}
+
+//****************************************剑指 Offer 07. 重建二叉树**************************************
+func buildTree(preorder []int, inorder []int) *TreeNode {
+	if len(preorder) == 0 {
+		return nil
+	}
+	if len(preorder) == 1 {
+		return &TreeNode{Val: preorder[0]}
+	}
+	index := 0
+	for index < len(inorder) {
+		if inorder[index] == preorder[0] {
+			break
+		}
+		index++
+	}
+	//[3,9,10, 20,15,7] 2
+	//[9,10,3, 15,20,7]
+	left := buildTree(preorder[1:index+1], inorder[:index])
+	right := buildTree(preorder[index+1:], inorder[index+1:])
+	return &TreeNode{Val: preorder[0], Left: left, Right: right}
+}
+
+//****************************************剑指 Offer 33. 二叉搜索树的后序遍历序列**************************************
+// func verifyPostorder(postorder []int) bool {
+// 	if len(postorder) == 0 {
+// 		return true
+// 	}
+// 	_, _, res := verifyPostorder_for(postorder)
+// 	return res
+// }
+
+// func verifyPostorder_for(postorder []int) (int, int, bool) {
+// 	if len(postorder) == 0 {
+// 		return math.MaxInt, math.MinInt, true
+// 	}
+// 	if len(postorder) == 1 {
+// 		return postorder[0], postorder[0], true
+// 	}
+// 	cur := postorder[len(postorder)-1]
+// 	index := len(postorder) - 2
+// 	for index >= 0 {
+// 		if postorder[index] < cur {
+// 			break
+// 		}
+// 		index--
+// 	}
+// 	lmax, _, left := verifyPostorder_for(postorder[:index+1])
+// 	_, rmin, right := verifyPostorder_for(postorder[index+1 : len(postorder)-1])
+// 	if left && right && (lmax == math.MaxInt || lmax < cur) && (rmin == math.MinInt || rmin > cur) {
+// 		return postorder[len(postorder)-2], postorder[0], true
+// 	}
+// 	return math.MaxInt, math.MinInt, false
+// }
+
+//*************************************剑指 Offer 15. 二进制中1的个数**************************************
+func hammingWeight(num uint32) int {
+	res := 0
+	for num != 0 {
+		if num&1 == 1 {
+			res++
+		}
+		num = num >> 1
+	}
+	return res
 }
