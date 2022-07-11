@@ -1,40 +1,40 @@
 package tree
 
-//节点由map和一个是否为结尾的标志量组成
-
 type Trie struct {
 	root *node
 }
 
 type node struct {
-	children map[rune]*node
-	isEnd    bool
+	isEnd  bool
+	childs map[byte]*node
 }
 
 func Constructor() Trie {
-	return Trie{root: &node{children: make(map[rune]*node), isEnd: false}}
+	return Trie{root: &node{childs: make(map[byte]*node)}}
 }
 
 func (this *Trie) Insert(word string) {
-	root := this.root
-	for _, w := range word {
-		if root.children[w] == nil {
-			root.children[w] = &node{children: make(map[rune]*node), isEnd: false}
+	cur := this.root
+	for _, b := range word {
+		if node, ok := cur.childs[byte(b)]; ok {
+			cur = node
+			continue
 		}
-		root = root.children[w]
+		newNode := &node{childs: make(map[byte]*node)}
+		cur.childs[byte(b)] = newNode
+		cur = newNode
 	}
-	//最后一个节点标记为结尾
-	root.isEnd = true
+	cur.isEnd = true
 }
 
 func (this *Trie) Search(word string) bool {
-	//每个字母都能搜索到，并且最后一个字母是在结尾，就是搜索成功
 	cur := this.root
-	for _, w := range word {
-		if cur.children[w] == nil {
-			return false
+	for _, b := range word {
+		if node, ok := cur.childs[byte(b)]; ok {
+			cur = node
+			continue
 		}
-		cur = cur.children[w]
+		return false
 	}
 	if cur.isEnd {
 		return true
@@ -44,11 +44,12 @@ func (this *Trie) Search(word string) bool {
 
 func (this *Trie) StartsWith(prefix string) bool {
 	cur := this.root
-	for _, w := range prefix {
-		if cur.children[w] == nil {
-			return false
+	for _, b := range prefix {
+		if node, ok := cur.childs[byte(b)]; ok {
+			cur = node
+			continue
 		}
-		cur = cur.children[w]
+		return false
 	}
 	return true
 }

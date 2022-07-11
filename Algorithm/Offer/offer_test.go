@@ -9,5 +9,4 @@ func TestGetLeastNumbers(t *testing.T) {
 }
 
 func TestVerifyPostorder(t *testing.T) {
-	verifyPostorder([]int{4, 6, 7, 5})
 }

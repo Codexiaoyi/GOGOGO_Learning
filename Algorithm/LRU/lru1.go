@@ -1,86 +1,89 @@
 package lru
 
 type LRUCache struct {
-	capacity      int
-	currentLength int
-	root          *node
-	m             map[int]*node
+	max    int
+	length int
+	root   *lruNode
+	m      map[int]*lruNode
 }
 
-type node struct {
-	key, value int
-	pre, next  *node
+type lruNode struct {
+	key   int
+	value int
+	pre   *lruNode
+	next  *lruNode
 }
 
 func Constructor(capacity int) LRUCache {
-	lru := LRUCache{
-		capacity:      capacity,
-		currentLength: 0,
-		root:          &node{},
-		m:             make(map[int]*node),
+	node := &lruNode{}
+	node.pre = node
+	node.next = node
+	return LRUCache{
+		max:  capacity,
+		root: node,
+		m:    make(map[int]*lruNode),
 	}
-	//root.next是队列头，root.pre是队列尾部
-	lru.root.pre = lru.root
-	lru.root.next = lru.root
-	return lru
 }
 
 func (this *LRUCache) Get(key int) int {
-	n, ok := this.m[key]
+	//先判断是不是已经有了
+	node, ok := this.m[key]
 	if !ok {
+		//没有就返回-1
 		return -1
 	}
-	if this.root.next != n {
-		this.moveToHead(n)
-	}
-	return n.value
+	//被访问了就移动到队头
+	this.moveToHead(node)
+	return node.value
 }
 
 func (this *LRUCache) Put(key int, value int) {
-	if n, ok := this.m[key]; ok {
-		n.value = value
-		this.moveToHead(n)
+	//先判断是不是已经有了
+	if node, ok := this.m[key]; ok {
+		node.value = value
+		this.moveToHead(node)
 		return
 	}
-	newNode := &node{key: key, value: value}
+	newNode := &lruNode{
+		key:   key,
+		value: value,
+	}
+	newNode.next = this.root.next
+	newNode.pre = this.root
+	this.root.next.pre = newNode
+	this.root.next = newNode
 	this.moveToHead(newNode)
+
 	this.m[key] = newNode
-	this.currentLength++
-	if this.currentLength > this.capacity {
-		this.removeAtTail()
+	this.length++
+
+	if this.length > this.max {
+		//淘汰
+		this.removeWithTail()
 	}
 }
 
-func (this *LRUCache) moveToHead(n *node) {
-	if n == this.root.next {
+func (this *LRUCache) moveToHead(node *lruNode) {
+	if node == this.root || node.pre == this.root {
 		return
 	}
-	if n.pre != nil && n.next != nil {
-		n.pre.next = n.next
-		n.next.pre = n.pre
-	}
-	temp := this.root.next
-	this.root.next = n
-	n.pre = this.root
-	n.next = temp
-	temp.pre = n
+	node.pre.next = node.next
+	node.next.pre = node.pre
+	node.next = this.root.next
+	node.pre = this.root
+	this.root.next.pre = node
+	this.root.next = node
 }
 
-func (this *LRUCache) removeAtTail() {
-	if this.root.pre == this.root {
-		return
-	}
+func (this *LRUCache) removeWithTail() {
 	tail := this.root.pre
+	if tail == this.root {
+		//空
+		return
+	}
 	tail.pre.next = this.root
 	this.root.pre = tail.pre
 	tail.next = nil
 	tail.pre = nil
 	delete(this.m, tail.key)
 }
-
-/**
- * Your LRUCache object will be instantiated and called as such:
- * obj := Constructor(capacity);
- * param_1 := obj.Get(key);
- * obj.Put(key,value);
- */
