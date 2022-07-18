@@ -196,3 +196,28 @@ func allPathsSourceTarget_backtrack(graph [][]int, index int, path []int, result
 		path = path[:len(path)-1]
 	}
 }
+
+//*****39. 组合总和********
+func combinationSum(candidates []int, target int) [][]int {
+	res := make([][]int, 0)
+	path := make([]int, 0)
+	combinationSum_back(0, candidates, target, path, &res)
+	return res
+}
+
+func combinationSum_back(start int, candidates []int, target int, path []int, res *[][]int) {
+	if target <= 0 {
+		if target == 0 {
+			newPath := make([]int, len(path))
+			copy(newPath, path)
+			*res = append(*res, newPath)
+		}
+		return
+	}
+
+	for i := start; i < len(candidates); i++ {
+		path = append(path, candidates[i])
+		combinationSum_back(i, candidates, target-candidates[i], path, res)
+		path = (path)[:len(path)-1]
+	}
+}

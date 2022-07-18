@@ -10,3 +10,7 @@ func TestGetLeastNumbers(t *testing.T) {
 
 func TestVerifyPostorder(t *testing.T) {
 }
+
+func TestMinSubArrayLen(t *testing.T) {
+	minSubArrayLen(7, []int{2, 3, 1, 2, 4, 3})
+}
